@@ -23,7 +23,7 @@ export const Shadow = styled.div`
         cursor: pointer;
         opacity: 1;
     }
-
+ 
 `;
 
 export const ThumbContainer = styled.div`
