@@ -20,7 +20,7 @@ export class DoujinProvider {
       });
   }
 
-  async getDoujin(id: string): Promise<IDoujin> {
+  async findById(id: string): Promise<IDoujin> {
     const ref = admin.firestore().collection('doujins').doc(id);
 
     const doujin = (await ref.get().then((res) => res.data())) as IDoujin;
@@ -30,7 +30,7 @@ export class DoujinProvider {
     return doujin;
   }
 
-  async getRandom(): Promise<IDoujin> {
+  async findRandom(): Promise<IDoujin> {
     const ref = admin.firestore().collection('summary').doc('counters');
 
     const summaryCounter = (await ref
@@ -88,7 +88,12 @@ export class DoujinProvider {
     };
   }
 
-  async getNewestDoujins(lastId?: number): Promise<SimplifiedDoujin[]> {
+  async findAllOrderBy(
+    lastId?: string,
+    field: 'id' | 'views' = 'id',
+    sort: 'asc' | 'desc' = 'desc',
+    limit = 18,
+  ): Promise<SimplifiedDoujin[]> {
     if (!lastId) {
       const maxIdDoc = await admin
         .firestore()
@@ -102,9 +107,9 @@ export class DoujinProvider {
     const ref = await admin
       .firestore()
       .collection('doujins')
-      .orderBy('id', 'desc')
-      .startAt(lastId)
-      .limit(18)
+      .orderBy(field, sort)
+      .startAt(parseInt(lastId))
+      .limit(limit)
       .get();
 
     return ref.docs.map((doc) => {
@@ -119,7 +124,7 @@ export class DoujinProvider {
     }) as SimplifiedDoujin[];
   }
 
-  async getPopularDoujins(): Promise<SimplifiedDoujin[]> {
+  async findAllOrderByViews(): Promise<SimplifiedDoujin[]> {
     const ref = await admin
       .firestore()
       .collection('doujins')
@@ -139,7 +144,7 @@ export class DoujinProvider {
     });
   }
 
-  async searchDoujin(
+  async findAllByTag(
     query: string,
     page = 1,
     sort = 'recent',

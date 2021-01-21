@@ -10,7 +10,6 @@ import {
 import { Doujin } from './doujin';
 import { DoujinProvider } from './doujin-provider';
 import {
-  DoujinQuery,
   DoujinSearchQuery,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   HttpDoujinPage,
@@ -26,20 +25,20 @@ export class DoujinController {
   constructor(private provider: DoujinProvider) {}
 
   @Get('doujin')
-  async getDoujinById(@Query() query: DoujinQuery): Promise<Doujin> {
-    if (!query.id) {
+  async getDoujinById(@Query('id') id: string): Promise<Doujin> {
+    if (!id) {
       throw new HttpException(
         { error: 'You must provide a doujinshi identifier.' },
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    return Doujin.from(await this.provider.getDoujin(query.id));
+    return Doujin.from(await this.provider.findById(id));
   }
 
   @Get('random')
   async getRandomDoujin(): Promise<Doujin> {
-    return Doujin.from(await this.provider.getRandom());
+    return Doujin.from(await this.provider.findRandom());
   }
 
   @Post('like')
@@ -53,21 +52,31 @@ export class DoujinController {
   }
 
   @Get()
-  async getNewestDoujins(): Promise<HttpSimplifiedDoujins> {
+  async getNewestDoujins(
+    @Query('last_id') lastId: string,
+  ): Promise<HttpSimplifiedDoujins> {
     return {
-      doujins: await this.provider.getNewestDoujins(),
+      doujins: await this.provider.findAllOrderBy(lastId),
     };
   }
 
   @Get('popular')
-  async getPopularDoujins(): Promise<HttpSimplifiedDoujins> {
+  async getPopularDoujins(
+    @Query('last_id') lastId: string,
+    @Query('limit') limit = 5,
+  ): Promise<HttpSimplifiedDoujins> {
     return {
-      doujins: await this.provider.getPopularDoujins(),
+      doujins: await this.provider.findAllOrderBy(
+        lastId,
+        'views',
+        'desc',
+        limit,
+      ),
     };
   }
 
   @Get('search')
-  async findDoujinByTag(
+  async searchDoujin(
     @Query() query: DoujinSearchQuery,
   ): Promise<HttpDoujinPage> {
     if (!query.q) {
@@ -77,6 +86,6 @@ export class DoujinController {
       );
     }
 
-    return await this.provider.searchDoujin(query.q, query.page, query.sort);
+    return await this.provider.findAllByTag(query.q, query.page, query.sort);
   }
 }

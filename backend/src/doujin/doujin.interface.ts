@@ -23,10 +23,6 @@ export interface IDoujin {
   views: number;
 }
 
-export interface DoujinQuery {
-  id: string;
-}
-
 export interface DoujinSearchQuery {
   q: string;
   page: number;

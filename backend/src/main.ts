@@ -6,7 +6,16 @@ async function bootstrap() {
   // initialize server
 
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+
+  const port = process.env.PORT || 8080;
+
+  app.enableCors({
+    origin: 'https://eroneko.ue.r.appspot.com',
+  });
+
+  await app.listen(port);
+
+  console.log(`Running on port ${port}`);
 
   // initialize firebase
 
