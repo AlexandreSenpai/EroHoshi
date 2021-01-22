@@ -1,187 +1,152 @@
 import { Injectable } from '@nestjs/common';
-import {
-  HttpDoujinPage,
-  HttpTotalDoujins,
-  IDoujin,
-  SimplifiedDoujin,
-  SummaryCounter,
-} from './doujin.interface';
+import { HttpDoujinPage, IDoujin, SimplifiedDoujin } from './doujin.interface';
 import * as admin from 'firebase-admin';
+import { SummaryCounter } from 'src/summary/summary.interface';
 
 @Injectable()
 export class DoujinProvider {
-  private incrementDoujinViews(doujinId: string) {
-    admin
-      .firestore()
-      .collection('doujins')
-      .doc(doujinId)
-      .update({
-        views: admin.firestore.FieldValue.increment(1),
-      });
-  }
-
-  async findById(id: string): Promise<IDoujin> {
-    const ref = admin.firestore().collection('doujins').doc(id);
-
-    const doujin = (await ref.get().then((res) => res.data())) as IDoujin;
-
-    this.incrementDoujinViews(id);
-
-    return doujin;
-  }
-
-  async findRandom(): Promise<IDoujin> {
-    const ref = admin.firestore().collection('summary').doc('counters');
-
-    const summaryCounter = (await ref
-      .get()
-      .then((res) => res.data())) as SummaryCounter;
-
-    let randomId = Math.floor(Math.random() * summaryCounter.doujins);
-
-    let doc = await admin
-      .firestore()
-      .collection('doujins')
-      .doc(randomId.toString())
-      .get();
-
-    while (!doc.exists) {
-      randomId = Math.floor(Math.random() * summaryCounter.doujins);
-      doc = await admin
-        .firestore()
-        .collection('doujins')
-        .doc(randomId.toString())
-        .get();
+    private incrementDoujinViews(doujinId: string) {
+        admin
+            .firestore()
+            .collection('doujins')
+            .doc(doujinId)
+            .update({
+                views: admin.firestore.FieldValue.increment(1),
+            });
     }
 
-    this.incrementDoujinViews(randomId.toString());
+    async findById(id: string): Promise<IDoujin> {
+        const ref = admin.firestore().collection('doujins').doc(id);
 
-    return doc.data() as IDoujin;
-  }
+        const doujin = (await ref.get().then((res) => res.data())) as IDoujin;
 
-  async likeDoujin(doujinId: string, uid: string) {
-    const ref = admin.firestore().collection('doujins').doc(doujinId);
+        this.incrementDoujinViews(id);
 
-    const doujin = (await ref.get().then((doc) => doc.data())) as IDoujin;
-
-    const [likes, dislikes] = [doujin.likes.length + 1, doujin.likes.length];
-
-    if (doujin.likes.indexOf(uid) !== -1) {
-      return;
+        return doujin;
     }
 
-    ref.update({
-      likes: [...doujin.likes, uid],
-      score: Math.ceil((likes * 100) / (likes + dislikes)),
-    });
-  }
+    async findRandom(): Promise<IDoujin> {
+        const ref = admin.firestore().collection('summary').doc('counters');
 
-  async getTotalDoujins(): Promise<HttpTotalDoujins> {
-    const doc = await admin
-      .firestore()
-      .collection('summary')
-      .doc('counters')
-      .get();
+        const summaryCounter = (await ref
+            .get()
+            .then((res) => res.data())) as SummaryCounter;
 
-    return {
-      total_doujins: doc.data().doujins,
-    };
-  }
+        let randomId = Math.floor(
+            Math.random() * summaryCounter.max_id,
+        ).toString();
 
-  async findAllOrderBy(
-    lastId?: string,
-    field: 'id' | 'views' = 'id',
-    sort: 'asc' | 'desc' = 'desc',
-    limit = 18,
-  ): Promise<SimplifiedDoujin[]> {
-    if (!lastId) {
-      const maxIdDoc = await admin
-        .firestore()
-        .collection('summary')
-        .doc('counters')
-        .get();
+        let doujin = this.findById(randomId.toString());
 
-      lastId = maxIdDoc.data().max_id;
+        while (!doujin) {
+            randomId = Math.floor(
+                Math.random() * summaryCounter.max_id,
+            ).toString();
+            doujin = this.findById(randomId);
+        }
+
+        this.incrementDoujinViews(randomId);
+
+        return doujin;
     }
 
-    const ref = await admin
-      .firestore()
-      .collection('doujins')
-      .orderBy(field, sort)
-      .startAt(parseInt(lastId))
-      .limit(limit)
-      .get();
+    async likeDoujin(doujinId: string, uid: string) {
+        const ref = admin.firestore().collection('doujins').doc(doujinId);
 
-    return ref.docs.map((doc) => {
-      const data = doc.data();
+        const doujin = (await ref.get().then((doc) => doc.data())) as IDoujin;
 
-      return {
-        id: data.id,
-        title: data.title,
-        lang: data.language ? data.language : data.languages[0],
-        cover: data.images[0],
-      };
-    }) as SimplifiedDoujin[];
-  }
+        const [likes, dislikes] = [
+            doujin.likes.length + 1,
+            doujin.likes.length,
+        ];
+        if (doujin.likes.indexOf(uid) !== -1) {
+            return;
+        }
 
-  async findAllOrderByViews(): Promise<SimplifiedDoujin[]> {
-    const ref = await admin
-      .firestore()
-      .collection('doujins')
-      .orderBy('views', 'desc')
-      .limit(5)
-      .get();
+        ref.update({
+            likes: [...doujin.likes, uid],
+            score: Math.ceil((likes * 100) / (likes + dislikes)),
+            dislikes:
+                doujin.dislikes.indexOf(uid) !== -1
+                    ? doujin.dislikes.filter((item) => item !== uid)
+                    : doujin.dislikes,
+        });
+    }
 
-    return ref.docs.map((doc) => {
-      const data = doc.data();
+    async findAllOrderBy(
+        lastId?: string,
+        field = 'id',
+        sort: 'asc' | 'desc' = 'desc',
+        limit = 18,
+    ): Promise<SimplifiedDoujin[]> {
+        if (!lastId) {
+            const maxIdDoc = await admin
+                .firestore()
+                .collection('summary')
+                .doc('counters')
+                .get();
 
-      return {
-        id: data.id,
-        title: data.title,
-        lang: data.language ? data.language : data.languages[0],
-        cover: data.images[0],
-      };
-    });
-  }
+            lastId = maxIdDoc.data().max_id;
+        }
 
-  async findAllByTag(
-    query: string,
-    page = 1,
-    sort = 'recent',
-  ): Promise<HttpDoujinPage> {
-    const tags = query.split(' ');
+        const ref = await admin
+            .firestore()
+            .collection('doujins')
+            .orderBy(field, sort)
+            .startAt(parseInt(lastId))
+            .limit(limit)
+            .get();
 
-    const sortOpt = {
-      recent: 'created_date',
-      popular: 'score',
-    };
+        return ref.docs.map((doc) => {
+            const data = doc.data();
 
-    const startAfter = page * 20;
-    const startAt = page > 1 ? startAfter - 20 : 0;
+            return {
+                id: data.id,
+                title: data.title,
+                lang: data.language ? data.language : data.languages[0],
+                cover: data.images[0],
+            };
+        }) as SimplifiedDoujin[];
+    }
 
-    const ref = await admin
-      .firestore()
-      .collection('doujins')
-      .where('tags_to_search', 'array-contains-any', tags)
-      .orderBy(sortOpt[sort], 'desc')
-      .get();
+    async findAllByTag(
+        query: string,
+        page = 1,
+        sort = 'recent',
+    ): Promise<HttpDoujinPage> {
+        const tags = query.split(' ');
 
-    const doujins = ref.docs.slice(startAt, startAfter).map((doc) => {
-      const data = doc.data();
+        const sortOpt = {
+            recent: 'created_date',
+            popular: 'score',
+        };
 
-      return {
-        id: data.id,
-        title: data.title,
-        lang: data.language ? data.language : data.languages[0],
-        cover: data.images[0],
-      };
-    });
+        const startAfter = page * 20;
+        const startAt = page > 1 ? startAfter - 20 : 0;
 
-    return {
-      doujins,
-      total_pages: Math.ceil(ref.docs.length / 20),
-      total_results: ref.docs.length,
-      sort: sort,
-    };
-  }
+        const ref = await admin
+            .firestore()
+            .collection('doujins')
+            .where('tags_to_search', 'array-contains-any', tags)
+            .orderBy(sortOpt[sort], 'desc')
+            .get();
+
+        const doujins = ref.docs.slice(startAt, startAfter).map((doc) => {
+            const data = doc.data();
+
+            return {
+                id: data.id,
+                title: data.title,
+                lang: data.language ? data.language : data.languages[0],
+                cover: data.images[0],
+            };
+        });
+
+        return {
+            doujins,
+            total_pages: Math.ceil(ref.docs.length / 20),
+            total_results: ref.docs.length,
+            sort: sort,
+        };
+    }
 }

@@ -3,22 +3,18 @@ import { AppModule } from './app.module';
 import * as admin from 'firebase-admin';
 
 async function bootstrap() {
-  // initialize server
+    // initialize server
 
-  const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, { cors: true });
 
-  const port = process.env.PORT || 8080;
+    const port = process.env.PORT || 8080;
 
-  app.enableCors({
-    origin: 'https://eroneko.ue.r.appspot.com',
-  });
+    await app.listen(port);
 
-  await app.listen(port);
+    console.log(`Running on port ${port}`);
 
-  console.log(`Running on port ${port}`);
+    // initialize firebase
 
-  // initialize firebase
-
-  admin.initializeApp();
+    admin.initializeApp();
 }
 bootstrap();
