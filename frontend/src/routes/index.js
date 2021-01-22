@@ -5,6 +5,7 @@ import Container from '../components/Container';
 import Home from '../pages/HomePage';
 import DoujinPage from '../pages/DoujinPage';
 import SearchPage from '../pages/SearchPage';
+import GalleryPage from '../pages/GalleryPage';
 
 export default function Routes(){
 
@@ -22,6 +23,7 @@ export default function Routes(){
                 <Rota path="/" exact component={Home} sidebar={true} />
                 <Rota path="/d/:id" component={DoujinPage} sidebar={false} />
                 <Rota path="/search" component={SearchPage} sidebar={false} />
+                <Rota path="/r/:id" component={GalleryPage} sidebar={false} />
             </Switch>
         </Router>
     );

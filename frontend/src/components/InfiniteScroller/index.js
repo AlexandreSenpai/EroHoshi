@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Thumb from '../Thumb';
-import useInfinite from './hooks';
+import useScroller from '../../hooks/useScroller';
 
 import { ScrollerContainer } from './styles';
 
@@ -14,7 +14,7 @@ export default function InfiniteScroller(){
         error,
         hasMore,
         loading
-    } = useInfinite(lastId);
+    } = useScroller(lastId, '/', { params: { last_id: lastId } });
 
     const observer = useRef(null);
 

@@ -11,7 +11,7 @@ export const DoujinContainer = styled.div`
 
 export const HeaderContainer = styled.div`
     width: 100%;
-    background: #2c2c2c;
+    background: #242426;
     display: flex;
     align-items: center;
     padding: 3rem;
@@ -66,7 +66,7 @@ export const AditionalInformationHolder = styled.div`
 export const RatingHolder = styled.div`
     width: 15rem;
     height: 15rem;
-    background: #2c2c2c;
+    background: #242426;
 
     p{
         font-size: 3rem;
@@ -137,7 +137,6 @@ export const Button = styled.button`
     background: ${props => props.background};
     border: none;
     border-radius: 5px;
-    width: 8rem;
     justify-content: center;
     padding: 1rem;
     margin: .5rem;

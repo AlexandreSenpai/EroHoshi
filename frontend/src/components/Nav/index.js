@@ -54,7 +54,7 @@ export default function Nav({ sidebarStatus, setSidebarStatus, history }) {
             <UnorderedList>
                 <ListItem onClick={handle_random}>Random</ListItem>
                 <ListItem>Info</ListItem>
-                <ListItem>Upload</ListItem>
+                {/* <ListItem>Upload</ListItem> */}
             </UnorderedList>
         </NavContainer>
     )
