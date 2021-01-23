@@ -2,14 +2,14 @@ import React from 'react';
 
 import { SectionContainer, TitleSection, TitleSectionContainer, SectionThumbsContainer } from './styles';
 
-export default function Section({SectionTitle, TitleIcon, Content, ...props}){
+export default function Section({SectionTitle, TitleIcon, Content }){
     return(
         <SectionContainer>
             <TitleSectionContainer>
                 <TitleIcon fontSize="inherit" color="inherit" /><TitleSection>{SectionTitle}</TitleSection>
             </TitleSectionContainer>
             <SectionThumbsContainer>
-                <Content {...props} />
+                <Content />
             </SectionThumbsContainer>
         </SectionContainer>
     );

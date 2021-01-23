@@ -142,6 +142,7 @@ export const Button = styled.button`
     margin: .5rem;
     transition: 100ms ease-in;
     color: #f1f1f1;
+    align-items: center;
 
     :hover{
         opacity: .5;
@@ -160,4 +161,11 @@ export const PostInformation = styled.div`
         opacity: .6;
         padding: .1rem;
     }
+`;
+
+export const ReadMoreHolder = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;

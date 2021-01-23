@@ -5,6 +5,8 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import Cookie from 'js-cookies';
 import { uid } from 'uid';
 import useTitle from '../../hooks/useTitle';
+import useScrollbar from '../../hooks/useScrollbar';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import {
     DoujinContainer,
@@ -26,7 +28,8 @@ import {
     Preview,
     Button,
     ButtonsContainer,
-    PostInformation
+    PostInformation,
+    ReadMoreHolder
 } from './styles';
 
 
@@ -49,6 +52,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const [canLike, setCanLike] = useState(true);
     const [likes, setLikes] = useState([]);
     const [dislikes, setDislikes] = useState([]);
+    const [showMore, setShowMore] = useState(false);
 
     let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
 
@@ -63,6 +67,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
     }, [uuid, likes])
 
     useTitle(title);
+    useScrollbar();
 
     const handle_like = () => {
         api.post('/like', { 'uid': uuid, doujinId: ID.toString() });
@@ -94,6 +99,12 @@ export default function DoujinPage({ computedMatch, location, history }) {
         setDislikes(data.dislikes);
     }
     
+    const toggle_show = () => {
+        setShowMore(prevShow => {
+            return !prevShow;
+        });
+    }
+
     const get_doujins = useCallback(() => {
 
         if(location.state){
@@ -155,14 +166,24 @@ export default function DoujinPage({ computedMatch, location, history }) {
             </HeaderContainer>
             <GalleryContainer>
                 {
-                    previewList.length > 0
-                    ? previewList.map((record, index) => (
+                    previewList.length > 0 && showMore === false
+                    ? previewList.slice(0, 10).map((record, index) => (
                         <PreviewContainer key={Math.random()} onClick={() => to_read(index)}>
                             <Preview src={record} />
                         </PreviewContainer>
                       ))
-                    : null
+                    : previewList.map((record, index) => (
+                        <PreviewContainer key={Math.random()} onClick={() => to_read(index)}>
+                            <Preview src={record} />
+                        </PreviewContainer>
+                      ))
                 }
+                <ReadMoreHolder>
+                    <Button background="#e72b69" color="inherit" onClick={toggle_show}>
+                        <MoreHorizIcon color="inherit" fontSize="large" /> 
+                        {showMore === false ? "Show More" : "Show Less"}
+                    </Button>
+                </ReadMoreHolder>
             </GalleryContainer>
         </DoujinContainer>
     )

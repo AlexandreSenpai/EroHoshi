@@ -6,6 +6,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import IconButton from '@material-ui/core/IconButton';
 import useTitle from '../../hooks/useTitle';
+import useScrollbar from '../../hooks/useScrollbar';
 
 import {
     ContentHolder,
@@ -36,6 +37,7 @@ export default function GalleryPage({ computedMatch, location }) {
     }, [])
 
     useTitle(title);
+    useScrollbar(page);
 
     const handle_click = (evt) => {
         setPage(prevPage => {

@@ -11,6 +11,11 @@ export const SidebarContainer = styled.aside`
 
 export const UnorderedList = styled.ul`
     list-style: none;
+
+    a{
+        color: inherit;
+        text-decoration: none;
+    }
 `;
 
 export const ListItem = styled.li`
