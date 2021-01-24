@@ -29,4 +29,9 @@ export const SectionThumbsContainer = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+
+    .ui, .inverted, .segment{
+        width: 200px;
+        height: 100px;
+    }
 `;

@@ -9,6 +9,7 @@ import Thumb from '../../components/Thumb';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import InfiniteScroller from '../../components/InfiniteScroller';
+import PlaceholderLoader from '../../components/Placeholder';
 
 import {
     HomeContainer
@@ -44,7 +45,13 @@ export default function HomePage() {
                                 title={record.title} />
                         </Link>
                       ))
-                    : null
+                    :   <>
+                            <PlaceholderLoader />
+                            <PlaceholderLoader />
+                            <PlaceholderLoader />
+                            <PlaceholderLoader />
+                            <PlaceholderLoader />
+                        </>
                 }
             </>
         )

@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Thumb from '../Thumb';
 import useScroller from '../../hooks/useScroller';
+import PlaceholderLoader from '../../components/Placeholder';
 
 import { ScrollerContainer } from './styles';
 
@@ -31,26 +32,41 @@ export default function InfiniteScroller({ path, aditional_body }){
 
     return(
         <ScrollerContainer>
-            {Array.from(doujins).map((doujin, index) => {
-                if(doujins.size - 1 === index){
-                    console.log(doujin)
-                    return (<Link ref={get_last_div} key={doujin[1].id} to={`/d/${doujin[1].id}`}>
-                                <Thumb 
-                                    id={doujin[1].id} 
-                                    thumbnail={doujin[1].cover} 
-                                    lang={doujin[1].lang} 
-                                    title={doujin[1].title} />
-                            </Link>)
-                }else{
-                    return (<Link key={doujin[1].id} to={`/d/${doujin[1].id}`}>
-                            <Thumb 
-                                id={doujin[1].id} 
-                                thumbnail={doujin[1].cover} 
-                                lang={doujin[1].lang} 
-                                title={doujin[1].title} />
-                        </Link>)
-                }
-            })}
+            {Array.from(doujins).length > 0
+                ?   Array.from(doujins).map((doujin, index) => {
+                        if(doujins.size - 1 === index){
+                            console.log(doujin)
+                            return (<Link ref={get_last_div} key={doujin[1].id} to={`/d/${doujin[1].id}`}>
+                                        <Thumb 
+                                            id={doujin[1].id} 
+                                            thumbnail={doujin[1].cover} 
+                                            lang={doujin[1].lang} 
+                                            title={doujin[1].title} />
+                                    </Link>)
+                        }else{
+                            return (<Link key={doujin[1].id} to={`/d/${doujin[1].id}`}>
+                                    <Thumb 
+                                        id={doujin[1].id} 
+                                        thumbnail={doujin[1].cover} 
+                                        lang={doujin[1].lang} 
+                                        title={doujin[1].title} />
+                                </Link>)
+                        }})
+                :   <>
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                        <PlaceholderLoader />
+                    </>
+            }
         </ScrollerContainer>
     );
 }
