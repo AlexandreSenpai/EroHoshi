@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HttpDoujinPage, IDoujin, SimplifiedDoujin } from './doujin.interface';
+import { IDoujin, SimplifiedDoujin } from './doujin.interface';
 import * as admin from 'firebase-admin';
 import { SummaryCounter } from 'src/summary/summary.interface';
 
@@ -57,7 +57,7 @@ export class DoujinProvider {
 
         const [likes, dislikes] = [
             doujin.likes.length + 1,
-            doujin.likes.length,
+            doujin.dislikes.length,
         ];
         if (doujin.likes.indexOf(uid) !== -1) {
             return;
@@ -75,78 +75,81 @@ export class DoujinProvider {
 
     async findAllOrderBy(
         lastId?: string,
-        field = 'id',
-        sort: 'asc' | 'desc' = 'desc',
+        field = 'score',
         limit = 18,
     ): Promise<SimplifiedDoujin[]> {
-        if (!lastId) {
-            const maxIdDoc = await admin
-                .firestore()
-                .collection('summary')
-                .doc('counters')
-                .get();
+        let res: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = undefined;
 
-            lastId = maxIdDoc.data().max_id;
-        }
-
-        const ref = await admin
+        const ref = admin
             .firestore()
             .collection('doujins')
-            .orderBy(field, sort)
-            .startAt(parseInt(lastId))
-            .limit(limit)
-            .get();
+            .orderBy(field, 'desc');
 
-        return ref.docs.map((doc) => {
-            const data = doc.data();
+        if (!lastId) {
+            res = await ref.limit(limit).get();
+        } else {
+            const lastDoujin = await admin
+                .firestore()
+                .collection('doujins')
+                .doc(lastId)
+                .get();
+
+            res = await ref.startAt(lastDoujin).limit(limit).get();
+        }
+
+        return res.docs.map((doc) => {
+            const data = doc.data() as IDoujin;
 
             return {
-                id: data.id,
+                id: data.id.toString(),
                 title: data.title,
                 lang: data.language ? data.language : data.languages[0],
-                cover: data.images[0],
+                cover: data.thumb ? data.thumb : data.images[0],
             };
         }) as SimplifiedDoujin[];
     }
 
     async findAllByTag(
         query: string,
-        page = 1,
+        lastId?: string,
         sort = 'recent',
-    ): Promise<HttpDoujinPage> {
+    ): Promise<SimplifiedDoujin[]> {
         const tags = query.split(' ');
+
+        let res: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = undefined;
 
         const sortOpt = {
             recent: 'created_date',
             popular: 'score',
         };
 
-        const startAfter = page * 20;
-        const startAt = page > 1 ? startAfter - 20 : 0;
-
-        const ref = await admin
+        const ref = admin
             .firestore()
             .collection('doujins')
             .where('tags_to_search', 'array-contains-any', tags)
-            .orderBy(sortOpt[sort], 'desc')
-            .get();
+            .orderBy(sortOpt[sort], 'desc');
 
-        const doujins = ref.docs.slice(startAt, startAfter).map((doc) => {
-            const data = doc.data();
+        if (!lastId) {
+            res = await ref.limit(20).get();
+        } else {
+            const lastDoujin = await admin
+                .firestore()
+                .collection('doujin')
+                .doc(lastId)
+                .get();
+
+            res = await ref.startAt(lastDoujin).limit(20).get();
+        }
+
+        return res.docs.map((doc) => {
+            const data = doc.data() as IDoujin;
 
             return {
-                id: data.id,
+                id: data.id.toString(),
                 title: data.title,
                 lang: data.language ? data.language : data.languages[0],
-                cover: data.images[0],
+                cover: data.thumb ? data.thumb : data.images[0],
             };
-        });
-
-        return {
-            doujins,
-            total_pages: Math.ceil(ref.docs.length / 20),
-            total_results: ref.docs.length,
-            sort: sort,
-        };
+        }) as SimplifiedDoujin[];
     }
 }

@@ -1,22 +1,18 @@
 import {
     Body,
     Controller,
+    DefaultValuePipe,
     Get,
     HttpException,
     HttpStatus,
+    ParseIntPipe,
     Post,
     Query,
 } from '@nestjs/common';
 import { Doujin } from './doujin';
 import { DoujinProvider } from './doujin-provider';
-import {
-    DoujinSearchQuery,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    HttpDoujinPage,
-    HttpLike,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    HttpSimplifiedDoujins,
-} from './doujin.interface';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { HttpLike, SimplifiedDoujin } from './doujin.interface';
 
 @Controller()
 export class DoujinController {
@@ -47,43 +43,36 @@ export class DoujinController {
     @Get()
     async getNewestDoujins(
         @Query('last_id') lastId: string,
-    ): Promise<HttpSimplifiedDoujins> {
+    ): Promise<{ doujins: SimplifiedDoujin[] }> {
         return {
-            doujins: await this.provider.findAllOrderBy(lastId),
+            doujins: await this.provider.findAllOrderBy(lastId, 'id', 18),
         };
     }
 
     @Get('popular')
     async getMostViewedDoujins(
         @Query('last_id') lastId: string,
-        @Query('limit') limit = 5,
-        @Query('field') field = 'views',
-    ): Promise<HttpSimplifiedDoujins> {
+        @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Query('field', new DefaultValuePipe('views')) field: string,
+    ): Promise<{ doujins: SimplifiedDoujin[] }> {
         return {
-            doujins: await this.provider.findAllOrderBy(
-                lastId,
-                field,
-                'desc',
-                limit,
-            ),
+            doujins: await this.provider.findAllOrderBy(lastId, field, limit),
         };
     }
 
     @Get('search')
     async searchDoujin(
-        @Query() query: DoujinSearchQuery,
-    ): Promise<HttpDoujinPage> {
-        if (!query.q) {
+        @Query('q') query: string,
+        @Query('last_id') lastId: string,
+        @Query('sort', new DefaultValuePipe('recent')) sort: string,
+    ): Promise<SimplifiedDoujin[]> {
+        if (!query) {
             throw new HttpException(
                 { error: 'You must provide tags to make a doujinshi search' },
                 HttpStatus.BAD_REQUEST,
             );
         }
 
-        return await this.provider.findAllByTag(
-            query.q,
-            query.page,
-            query.sort,
-        );
+        return await this.provider.findAllByTag(query, lastId, sort);
     }
 }

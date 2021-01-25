@@ -22,12 +22,8 @@ export interface IDoujin {
     total_pages: number;
     views: number;
     comments: Comment[];
-}
-
-export interface DoujinSearchQuery {
-    q: string;
-    page: number;
-    sort: string;
+    thumb: string;
+    language: string;
 }
 
 export interface HttpLike {
@@ -40,15 +36,4 @@ export interface SimplifiedDoujin {
     title: string;
     lang: string;
     cover: string;
-}
-
-export interface HttpSimplifiedDoujins {
-    doujins: SimplifiedDoujin[];
-}
-
-export interface HttpDoujinPage {
-    doujins: SimplifiedDoujin[];
-    total_pages: number;
-    total_results: number;
-    sort: string;
 }

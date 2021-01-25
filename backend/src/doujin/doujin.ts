@@ -23,6 +23,8 @@ export class Doujin {
         public total_pages: number,
         public views: number,
         public comments: Comment[],
+        public thumb: string,
+        public language: string,
     ) {}
 
     static from(raw: IDoujin) {
@@ -48,6 +50,8 @@ export class Doujin {
             raw.total_pages,
             raw.views,
             raw.comments,
+            raw.thumb,
+            raw.language,
         );
     }
 }
