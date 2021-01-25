@@ -36,8 +36,13 @@ export class DoujinController {
     }
 
     @Post('like')
-    async likeDoujin(@Body() httpLike: HttpLike): Promise<any> {
+    async likeDoujin(@Body() httpLike: HttpLike): Promise<void> {
         this.provider.likeDoujin(httpLike.doujinId, httpLike.uid);
+    }
+
+    @Post('dislike')
+    async dislikeDoujin(@Body() httpLike: HttpLike): Promise<void> {
+        this.provider.dislikeDoujin(httpLike.doujinId, httpLike.uid);
     }
 
     @Get()

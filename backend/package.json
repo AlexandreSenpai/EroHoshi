@@ -27,6 +27,7 @@
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
     "firebase-admin": "^9.4.2",
+    "pnormaldist": "^1.0.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
