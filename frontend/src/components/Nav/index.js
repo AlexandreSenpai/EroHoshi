@@ -30,7 +30,7 @@ export default function Nav({ sidebarStatus, setSidebarStatus, history }) {
     const handle_search = useCallback(async () => {
         var search = await api.get('/search', { params:  { q: query, page: 1, sort: 'recent' } })
         history.push({
-            pathname: `/search`,
+            pathname: `/q/search`,
             search: `?q=${query}`,
             state: search.data
         })
@@ -52,9 +52,9 @@ export default function Nav({ sidebarStatus, setSidebarStatus, history }) {
             </MenuHolder>
             <Searchbar setQuery={setQuery} />
             <UnorderedList>
-                <ListItem onClick={handle_random}>Random</ListItem>
-                <ListItem>Info</ListItem>
-                <ListItem>Upload</ListItem>
+                {/* <ListItem onClick={handle_random}>Random</ListItem>
+                <ListItem>Info</ListItem> */}
+                {/* <ListItem>Upload</ListItem> */}
             </UnorderedList>
         </NavContainer>
     )

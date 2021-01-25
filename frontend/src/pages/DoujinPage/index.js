@@ -4,6 +4,9 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import Cookie from 'js-cookies';
 import { uid } from 'uid';
+import useTitle from '../../hooks/useTitle';
+import useScrollbar from '../../hooks/useScrollbar';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import {
     DoujinContainer,
@@ -25,14 +28,14 @@ import {
     Preview,
     Button,
     ButtonsContainer,
-    PostInformation
+    PostInformation,
+    ReadMoreHolder
 } from './styles';
 
 
-export default function DoujinPage({ computedMatch, location }) {
+export default function DoujinPage({ computedMatch, location, history }) {
 
-    const [cancelToken, setCancelToken] = useState(null);
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState("EroHoshi");
     const [ID, setID] = useState(0);
     const [secondaryTitle, setSecondaryTitle] = useState('');
     const [previewList, setPreviewList] = useState([]);
@@ -47,6 +50,9 @@ export default function DoujinPage({ computedMatch, location }) {
     const [createdDate, setCreatedDate] = useState(null);
     const [views, setViews] = useState(0);
     const [canLike, setCanLike] = useState(true);
+    const [likes, setLikes] = useState([]);
+    const [dislikes, setDislikes] = useState([]);
+    const [showMore, setShowMore] = useState(false);
 
     let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
 
@@ -55,16 +61,23 @@ export default function DoujinPage({ computedMatch, location }) {
     }, [location]);
 
     useEffect(() => {
-        if(ID > 0){
-            api.get('/canLike', { params: { 'uid': uuid, doujin_id: ID } }).then(res => {
-                setCanLike(JSON.parse(res.data.can_like));
-                console.log(JSON.parse(res.data.can_like))
-            })
+        if(likes.indexOf(uuid) === -1){
+            setCanLike(true);
         }
-    }, [uuid, ID])
+    }, [uuid, likes])
+
+    useTitle(title);
+    useScrollbar();
 
     const handle_like = () => {
-        api.get('/like', { params: { 'uid': uuid, doujin_id: ID } })
+        api.post('/like', { 'uid': uuid, doujinId: ID.toString() });
+    }
+
+    const to_read = (index) => {
+        history.push({
+            pathname: `/r/${ID}`,
+            state: { images: previewList, index, title }
+        })
     }
 
     const populate_state = (data) => {
@@ -81,20 +94,18 @@ export default function DoujinPage({ computedMatch, location }) {
         setTags(data.tags);
         setScore(data.score || 0);
         setViews(data.views || 0);
-        setCreatedDate(() => {
-            var t = new Date(1970, 0, 1);
-            t.setSeconds(data.created_date._seconds);
-            return `${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`;
-        });
+        setCreatedDate(data.created_date);
+        setLikes(data.likes);
+        setDislikes(data.dislikes);
     }
     
-    const get_doujins = useCallback(() => {
-        
-        if(cancelToken){
-            cancelToken.cancel("Page switch before doujin fetch.");
-        }
+    const toggle_show = () => {
+        setShowMore(prevShow => {
+            return !prevShow;
+        });
+    }
 
-        setCancelToken(axios_object.CancelToken.source());
+    const get_doujins = useCallback(() => {
 
         if(location.state){
             populate_state(location.state);
@@ -138,10 +149,10 @@ export default function DoujinPage({ computedMatch, location }) {
                             </RatingHolder>
                             <ButtonsContainer>
                                 <Button background="#e72b69" disabled={!canLike} onClick={handle_like}>
-                                    <ThumbUpIcon /> Like
+                                    <ThumbUpIcon /> Like ({likes.length})
                                 </Button>
                                 <Button background="#e72b696d">
-                                    <ThumbDownIcon /> Dislike
+                                    <ThumbDownIcon /> Dislike ({dislikes.length})
                                 </Button>
                             </ButtonsContainer>
                             <PostInformation>
@@ -155,12 +166,24 @@ export default function DoujinPage({ computedMatch, location }) {
             </HeaderContainer>
             <GalleryContainer>
                 {
-                    previewList.length > 0
-                    ? previewList.map(record => (
-                        <PreviewContainer key={Math.random()}><Preview src={record} /></PreviewContainer>
+                    previewList.length > 0 && showMore === false
+                    ? previewList.slice(0, 10).map((record, index) => (
+                        <PreviewContainer key={Math.random()} onClick={() => to_read(index)}>
+                            <Preview src={record} />
+                        </PreviewContainer>
                       ))
-                    : null
+                    : previewList.map((record, index) => (
+                        <PreviewContainer key={Math.random()} onClick={() => to_read(index)}>
+                            <Preview src={record} />
+                        </PreviewContainer>
+                      ))
                 }
+                <ReadMoreHolder>
+                    <Button background="#e72b69" color="inherit" onClick={toggle_show}>
+                        <MoreHorizIcon color="inherit" fontSize="large" /> 
+                        {showMore === false ? "Show More" : "Show Less"}
+                    </Button>
+                </ReadMoreHolder>
             </GalleryContainer>
         </DoujinContainer>
     )

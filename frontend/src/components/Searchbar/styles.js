@@ -10,6 +10,10 @@ export const SearchContainer = styled.div`
     justify-items: space-between;
     font-size: 2rem;
     margin: 0rem 2rem;
+
+    @media screen and (max-width: 414px) {
+        margin: 0rem;
+    }
 `;
 
 export const SearchInput = styled.input`

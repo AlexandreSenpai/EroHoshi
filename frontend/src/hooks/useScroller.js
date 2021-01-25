@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { api, axios_object } from '../../services/api';
+import { api, axios_object } from '../services/api';
 
-export default function useScroller(last_id){
+export default function useScroller(last_id, route_path, body){
     
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [doujins, setDoujins] = useState(new Map());
@@ -11,8 +12,8 @@ export default function useScroller(last_id){
     useEffect(() => {
         setLoading(true);
         setError(false);
-        api.get('/', { params: { last_id } }).then(res => {
-            
+        api.get(route_path, body).then(res => {
+
             var current_doujins = Array.from(doujins)
             var new_doujins = res.data.doujins.map(douj => {return [douj.id, douj]})
 

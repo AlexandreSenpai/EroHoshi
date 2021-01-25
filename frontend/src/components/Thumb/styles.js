@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 export const ThumbImage = styled.div`
     background: url(${props => props.thumbnail});
     background-size: cover;
@@ -28,7 +27,7 @@ export const Shadow = styled.div`
 `;
 
 export const ThumbContainer = styled.div`
-    margin: .3rem .3rem;
+    margin: .3rem;
     width: 23rem;
     height: 35rem;
     overflow: hidden;
@@ -38,6 +37,40 @@ export const ThumbContainer = styled.div`
     &:hover ${Shadow}{
         cursor: pointer;
     }
+
+    @media screen and (max-width: 1366px) {
+        width: 19rem;
+        height: 29rem;
+    }
+    
+    @media screen and (max-width: 1280px) {
+        width: 18rem;
+        height: 28rem;
+    }
+    
+    @media screen and (max-width: 1024px) {
+        width: 16rem;
+        height: 26rem;
+    }
+    
+    @media screen and (max-width: 414px) {
+        width: 18rem;
+        height: 25rem;
+        margin: .2rem;
+    }
+    
+    @media screen and (max-width: 411px) {
+        width: 17.6rem;
+        height: 25rem;
+        margin: .2rem;
+    }
+    
+    @media screen and (max-width: 375px) {
+        width: 16.8rem;
+        height: 25rem;
+        margin: .2rem;
+    }
+
 `;
 
 export const ThumbDescription = styled.div`
@@ -59,6 +92,11 @@ export const ThumbTitle = styled.p`
     width: 100%;
     text-align: center;
     color: #f1f1f1;
+
+    @media screen and (max-width: 414px) {
+        font-size: 1.2rem;
+    }
+
 `;
 
 export const ThumbLanguage = styled.div`

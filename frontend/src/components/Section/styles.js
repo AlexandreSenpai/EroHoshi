@@ -6,6 +6,15 @@ export const SectionContainer = styled.section`
     margin: 2rem 2rem 2rem 0;
     background: #242426;
     border-radius: 5px;
+
+    @media screen and (max-width: 414px) {
+        margin: 2rem 0rem;
+    }
+
+    @media screen and (max-width: 360px) {
+        padding: .5rem;
+    }
+
 `;
 
 export const TitleSectionContainer = styled.div`
@@ -16,6 +25,10 @@ export const TitleSectionContainer = styled.div`
     font-size: 3rem;
     align-items: center;
     color: #e72b69;
+
+    @media screen and (max-width: 414px) {
+        justify-content: center;
+    }
 `;
 
 export const TitleSection = styled.h2`
@@ -29,4 +42,9 @@ export const SectionThumbsContainer = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+
+    .ui, .inverted, .segment{
+        width: 200px;
+        height: 100px;
+    }
 `;

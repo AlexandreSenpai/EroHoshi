@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 
 export const SidebarContainer = styled.aside`
+    top: 0;    
     min-width: 25rem;
     min-height: 100vh;
+    height: 100%;
     background: #242426;
     padding: 2rem 0;
-    margin-right: 1rem;
     display: ${props => props.sidebarStatus};
+    position: fixed;
+    z-index: 9999;
 `;
 
 export const UnorderedList = styled.ul`
@@ -38,4 +41,12 @@ export const ListItem = styled.li`
 export const Separator = styled.hr`
     opacity: .3;
     margin: 1rem;
+`;
+
+export const MenuHolder = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 1rem 4rem;
+    justify-content: flex-end;
 `;

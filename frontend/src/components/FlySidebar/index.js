@@ -1,4 +1,5 @@
 import React from 'react';
+import IconButton from '@material-ui/core/IconButton';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonIcon from '@material-ui/icons/Person';
@@ -7,13 +8,26 @@ import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
+import Clear from '@material-ui/icons/Clear';
+import InfoIcon from '@material-ui/icons/Info';
+import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
 
-import { SidebarContainer, UnorderedList, ListItem, Separator } from './styles';
+import { SidebarContainer, UnorderedList, ListItem, Separator, MenuHolder } from './styles';
 import { Link } from 'react-router-dom';
 
-export default function Sidebar({ sidebarStatus }){
+export default function FlySidebar({ sidebarStatus, setSidebarStatus }){
     return(
-        <SidebarContainer sidebarStatus={sidebarStatus === true && window.innerWidth > 1000 ? 'block' : 'none'}>
+        <SidebarContainer sidebarStatus={sidebarStatus === true && window.innerWidth <= 470 ? 'block' : 'none'}>
+            <MenuHolder>
+                <IconButton size="small" color="inherit" onClick={() => setSidebarStatus(!sidebarStatus)}>
+                    <Clear color="inherit" fontSize="large" />
+                </IconButton>
+            </MenuHolder>
+            <UnorderedList>
+                <ListItem><AllInclusiveIcon fontSize='large' color='inherit'/> Random</ListItem>
+                <ListItem><InfoIcon fontSize='large' color='inherit'/> Information</ListItem>
+            </UnorderedList>
+            <Separator />
             {/* <UnorderedList>
                 <ListItem><LocalOfferIcon fontSize='large' color='inherit'/> Tags</ListItem>
                 <ListItem><EmojiEmotionsIcon fontSize='large' color='inherit'/> Parodys</ListItem>
