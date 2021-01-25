@@ -52,8 +52,8 @@ export default function Nav({ sidebarStatus, setSidebarStatus, history }) {
             </MenuHolder>
             <Searchbar setQuery={setQuery} />
             <UnorderedList>
-                <ListItem onClick={handle_random}>Random</ListItem>
-                <ListItem>Info</ListItem>
+                {/* <ListItem onClick={handle_random}>Random</ListItem>
+                <ListItem>Info</ListItem> */}
                 {/* <ListItem>Upload</ListItem> */}
             </UnorderedList>
         </NavContainer>

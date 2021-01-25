@@ -11,6 +11,10 @@ handlers:
     static_files: build/\1
     upload: build/.*\.(json|ico|js)$
 
+  - url: /sitemap.txt
+    static_files: sitemap.txt
+    upload: sitemap.txt
+
   - url: .*
     secure: always
     redirect_http_response_code: 301

@@ -28,37 +28,32 @@ export default function SearchPage({ computedMatch, location }) {
     const [cancelToken, setCancelToken] = useState(null);
     
     useEffect(() => {
-        console.log(currentPage);
         get_doujins();
     }, [location.search, currentPage, query]);
     
     const get_doujins = useCallback(() => {
-        
-        if(cancelToken){
-            cancelToken.cancel("Page switch before doujin fetch.");
-        }
+    
+        // var [_, query_str] =  location.search.split("=")
 
-        var [_, query_str] =  location.search.split("=")
+        // setOldQuery(query);
+        // setQuery(query_str);
 
-        setOldQuery(query);
-        setQuery(query_str);
-
-        setCancelToken(axios_object.CancelToken.source());
-        if(location.state && currentPage === oldPage && query === oldQuery){
-            setResults(location.state.doujins);
-            setPages(location.state.total_pages);
-            setTotalResults(location.state.total_results);
-            setSort(location.state.sort);
-        }else{
-            if(query){
-                api.get('/search', { params: { q: query, page: currentPage, sort: 'recent' } }).then(records => {
-                    setResults(records.data.doujins);
-                    setPages(records.data.total_pages);
-                    setTotalResults(records.data.total_results);
-                    setSort(records.data.sort);
-                });
-            }
-        }
+        // setCancelToken(axios_object.CancelToken.source());
+        // if(location.state && currentPage === oldPage && query === oldQuery){
+        //     setResults(location.state.doujins);
+        //     setPages(location.state.total_pages);
+        //     setTotalResults(location.state.total_results);
+        //     setSort(location.state.sort);
+        // }else{
+        //     if(query){
+        //         api.get('/search', { params: { q: query, page: currentPage, sort: 'recent' } }).then(records => {
+        //             setResults(records.data.doujins);
+        //             setPages(records.data.total_pages);
+        //             setTotalResults(records.data.total_results);
+        //             setSort(records.data.sort);
+        //         });
+        //     }
+        // }
     });
 
     const handle_click = (data) => {
