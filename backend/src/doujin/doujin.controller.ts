@@ -1,23 +1,25 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     DefaultValuePipe,
     Get,
     HttpException,
     HttpStatus,
+    ParseArrayPipe,
     ParseIntPipe,
     Post,
     Query,
 } from '@nestjs/common';
-import { Doujin } from './doujin';
+import { Doujin } from './doujin.factory';
 import { DoujinProvider } from './doujin-provider';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { HttpLike, SimplifiedDoujin } from './doujin.interface';
+import { HttpLike, DoujinResponse } from './doujin.interface';
+import { DoujinResponseImpl } from './doujinResponse.factory';
 
 @Controller()
 export class DoujinController {
     constructor(private provider: DoujinProvider) {}
-
     @Get('doujin')
     async getDoujinById(@Query('id') id: string): Promise<Doujin> {
         if (!id) {
@@ -48,9 +50,13 @@ export class DoujinController {
     @Get()
     async getNewestDoujins(
         @Query('last_id') lastId: string,
-    ): Promise<{ doujins: SimplifiedDoujin[] }> {
+    ): Promise<{ doujins: DoujinResponse[] }> {
+        const doujins = await this.provider.findAllOrderBy(lastId, 'id', 18);
+
         return {
-            doujins: await this.provider.findAllOrderBy(lastId, 'id', 18),
+            doujins: doujins.map((doujin) => {
+                return DoujinResponseImpl.from(doujin);
+            }),
         };
     }
 
@@ -59,25 +65,42 @@ export class DoujinController {
         @Query('last_id') lastId: string,
         @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
         @Query('field', new DefaultValuePipe('views')) field: string,
-    ): Promise<{ doujins: SimplifiedDoujin[] }> {
+    ): Promise<{ doujins: DoujinResponse[] }> {
+        const doujins = await this.provider.findAllOrderBy(
+            lastId,
+            field,
+            limit,
+        );
+
         return {
-            doujins: await this.provider.findAllOrderBy(lastId, field, limit),
+            doujins: doujins.map((doujin) => {
+                return DoujinResponseImpl.from(doujin);
+            }),
         };
     }
 
     @Get('search')
     async searchDoujin(
-        @Query('q') query: string,
+        @Query(
+            'q',
+            new ParseArrayPipe({
+                items: String,
+                separator: ' ',
+                errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+                exceptionFactory: () =>
+                    new BadRequestException(
+                        'Must provide a query with space separated tags',
+                    ),
+            }),
+        )
+        tags: string[],
         @Query('last_id') lastId: string,
         @Query('sort', new DefaultValuePipe('recent')) sort: string,
-    ): Promise<SimplifiedDoujin[]> {
-        if (!query) {
-            throw new HttpException(
-                { error: 'You must provide tags to make a doujinshi search' },
-                HttpStatus.BAD_REQUEST,
-            );
-        }
+    ): Promise<DoujinResponse[]> {
+        const doujins = await this.provider.findAllByTag(tags, lastId, sort);
 
-        return await this.provider.findAllByTag(query, lastId, sort);
+        return doujins.map((doujin) => {
+            return DoujinResponseImpl.from(doujin);
+        });
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IDoujin, SimplifiedDoujin } from './doujin.interface';
+import { IDoujin } from './doujin.interface';
 import * as admin from 'firebase-admin';
 import { SummaryCounter } from 'src/summary/summary.interface';
 import * as pnormaldist from 'pnormaldist';
@@ -120,7 +120,7 @@ export class DoujinProvider {
         lastId?: string,
         field = 'score',
         limit = 18,
-    ): Promise<SimplifiedDoujin[]> {
+    ): Promise<IDoujin[]> {
         let res: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = undefined;
 
         const ref = admin
@@ -140,25 +140,14 @@ export class DoujinProvider {
             res = await ref.startAt(lastDoujin).limit(limit).get();
         }
 
-        return res.docs.map((doc) => {
-            const data = doc.data() as IDoujin;
-
-            return {
-                id: data.id.toString(),
-                title: data.title,
-                lang: data.language ? data.language : data.languages[0],
-                cover: data.thumb ? data.thumb : data.images[0],
-            };
-        }) as SimplifiedDoujin[];
+        return res.docs.map((doc) => doc.data() as IDoujin);
     }
 
     async findAllByTag(
-        query: string,
+        tags: string[],
         lastId?: string,
         sort = 'recent',
-    ): Promise<SimplifiedDoujin[]> {
-        const tags = query.split(' ');
-
+    ): Promise<IDoujin[]> {
         let res: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = undefined;
 
         const sortOpt = {
@@ -177,22 +166,13 @@ export class DoujinProvider {
         } else {
             const lastDoujin = await admin
                 .firestore()
-                .collection('doujin')
+                .collection('doujins')
                 .doc(lastId)
                 .get();
 
             res = await ref.startAt(lastDoujin).limit(20).get();
         }
 
-        return res.docs.map((doc) => {
-            const data = doc.data() as IDoujin;
-
-            return {
-                id: data.id.toString(),
-                title: data.title,
-                lang: data.language ? data.language : data.languages[0],
-                cover: data.thumb ? data.thumb : data.images[0],
-            };
-        }) as SimplifiedDoujin[];
+        return res.docs.map((doc) => doc.data() as IDoujin);
     }
 }

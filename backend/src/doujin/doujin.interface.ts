@@ -31,7 +31,7 @@ export interface HttpLike {
     uid: string;
 }
 
-export interface SimplifiedDoujin {
+export interface DoujinResponse {
     id: string;
     title: string;
     lang: string;
