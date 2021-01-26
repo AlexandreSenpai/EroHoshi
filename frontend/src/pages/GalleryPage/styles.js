@@ -9,6 +9,10 @@ export const GalleryContainer = styled.div`
 
 export const ContentHolder = styled.div`
     margin: 2rem 0rem;
+
+    @media screen and (max-width: 414px) {
+        margin: 1rem 0rem;
+    }
 `;
 
 export const Image = styled.img`

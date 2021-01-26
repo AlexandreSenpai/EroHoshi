@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Nav from '../Nav';
-import Sidebar from '../Sidebar';
 import FlySidebar from '../FlySidebar';
 
 import { Container } from './styles';
@@ -17,7 +16,6 @@ export default function ContainerWrapper({ children, ...rest }) {
             <Nav sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
             <MainContainer>
                 <FlySidebar sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus}/>
-                <Sidebar sidebarStatus={sidebarStatus} />
                 {children}
             </MainContainer>
         </Container>

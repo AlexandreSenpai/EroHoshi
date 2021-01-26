@@ -35,7 +35,6 @@ export default function InfiniteScroller({ path, aditional_body }){
             {Array.from(doujins).length > 0
                 ?   Array.from(doujins).map((doujin, index) => {
                         if(doujins.size - 1 === index){
-                            console.log(doujin)
                             return (<Link ref={get_last_div} key={doujin[1].id} to={`/d/${doujin[1].id}`}>
                                         <Thumb 
                                             id={doujin[1].id} 
