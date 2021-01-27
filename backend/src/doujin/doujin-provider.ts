@@ -81,9 +81,9 @@ export class DoujinProvider {
 
         ref.update({
             likes: [...doujin.likes, uid],
-            score: Math.ceil(
-                this.scoreCalc(likes, likes + dislikes, 0.97) * 100,
-            ),
+            score: +(
+                this.scoreCalc(likes, likes + dislikes, 0.97) * 10
+            ).toFixed(1),
             dislikes:
                 doujin.dislikes.indexOf(uid) !== -1
                     ? doujin.dislikes.filter((item) => item !== uid)
@@ -100,6 +100,7 @@ export class DoujinProvider {
             doujin.likes.length,
             doujin.dislikes.length + 1,
         ];
+
         if (doujin.dislikes.indexOf(uid) !== -1) {
             return;
         }
