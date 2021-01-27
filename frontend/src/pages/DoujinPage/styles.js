@@ -111,6 +111,8 @@ export const TitleContent = styled.div`
 `;
 export const Content = styled.div`
     display: flex;
+    width: 100%;
+    max-width: 106rem;
     
     @media screen and (max-width: 414px) {
         flex-direction: column;
@@ -177,6 +179,10 @@ export const Button = styled.button`
     transition: 100ms ease-in;
     color: #f1f1f1;
     align-items: center;
+
+    :disabled{
+        background: ${props => props.background}6d;
+    }
 
     :hover{
         opacity: .5;

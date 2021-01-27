@@ -2,28 +2,49 @@ import styled from 'styled-components';
 
 export const SearchContainer = styled.div`
     width: 100rem;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-radius: 3px;
     background: #ff6a00;
     display: flex;
     align-items: center;
-    justify-items: space-between;
     font-size: 2rem;
     margin: 0rem 2rem;
 
     @media screen and (max-width: 414px) {
         margin: 0rem;
+        width: 30rem;
     }
 `;
 
 export const SearchInput = styled.input`
     width: 93%;
-    height: 100%;
+    height: 3.5rem;
     background: #1d1d1d;
-    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
     border: none;
     padding: 1rem;
     color: #f1f1f1;
     font-size: 1.5rem;
-    margin-right: 2rem;
+
+    @media screen and (max-width: 414px) {
+        width: 95%;
+    }
+`;
+
+export const SearchButton = styled.button`
+    width: 7%;
+    height: 3.5rem;
+    border: none;
+    background: #ff6a00;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f1f1f1;
+
+    @media screen and (max-width: 414px) {
+        width: 15%;
+    }
+
 `;

@@ -27,7 +27,7 @@ export default function HomePage() {
 
     const get_popular = useCallback(() => {
         api.get('/popular').then(records => {
-            setPopular(records.data.doujins);
+            setPopular(records.data);
         });
     });
 

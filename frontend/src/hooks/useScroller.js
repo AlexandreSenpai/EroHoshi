@@ -15,7 +15,7 @@ export default function useScroller(last_id, route_path, body){
         api.get(route_path, body).then(res => {
 
             var current_doujins = Array.from(doujins)
-            var new_doujins = res.data.doujins.map(douj => {return [douj.id, douj]})
+            var new_doujins = res.data.map(douj => {return [douj.id, douj]})
 
             setDoujins(new Map([...current_doujins, ...new_doujins]))
 

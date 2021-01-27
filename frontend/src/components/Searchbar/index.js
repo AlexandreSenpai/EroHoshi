@@ -3,7 +3,7 @@ import { api } from '../../services/api';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 
-import { SearchContainer, SearchInput } from './styles';
+import { SearchContainer, SearchInput, SearchButton, Form } from './styles';
 
 function Searchbar({ setQuery }) {
 
@@ -24,9 +24,9 @@ function Searchbar({ setQuery }) {
     return(
         <SearchContainer>
             <SearchInput placeholder={`Search by ${placeholder} doujins...`} type="search" ref={search_ref}/>
-            <IconButton color='inherit' size="small" onClick={handle_search}>
+            <SearchButton color='inherit' onClick={handle_search}>
                 <SearchIcon fontSize="large"/>
-            </IconButton>
+            </SearchButton>
         </SearchContainer>
     );
 }
