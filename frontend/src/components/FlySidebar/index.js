@@ -11,6 +11,7 @@ import FindInPageIcon from '@material-ui/icons/FindInPage';
 import Clear from '@material-ui/icons/Clear';
 import InfoIcon from '@material-ui/icons/Info';
 import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
+import Home from '@material-ui/icons/Home';
 
 import { SidebarContainer, UnorderedList, ListItem, Separator, MenuHolder } from './styles';
 import { Link } from 'react-router-dom';
@@ -24,6 +25,9 @@ export default function FlySidebar({ sidebarStatus, setSidebarStatus }){
                 </IconButton>
             </MenuHolder>
             <UnorderedList>
+                <Link to="/">
+                        <ListItem><Home fontSize='large' color='inherit'/> Home</ListItem>
+                </Link>
                 <ListItem><AllInclusiveIcon fontSize='large' color='inherit'/> Random</ListItem>
                 <ListItem><InfoIcon fontSize='large' color='inherit'/> Information</ListItem>
             </UnorderedList>

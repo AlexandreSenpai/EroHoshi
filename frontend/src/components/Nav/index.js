@@ -13,28 +13,15 @@ export default function Nav({ sidebarStatus, setSidebarStatus, history }) {
     
     const [query, setQuery] = useState(null);
 
-    const handle_random = async () => {
-        var record = await api.get('/random')
-        history.push({
-            pathname: `/d/${record.data.id}`,
-            state: record.data
-        });
-    }
-
     useEffect(() => {
-        if(query){
-            handle_search();
+        if(query && query !== ''){
+            history.push({
+                pathname: `/q/search`,
+                search: `?q=${query}`,
+                state: {query}
+            });
         }
     }, [query])
-
-    const handle_search = useCallback(async () => {
-        var search = await api.get('/search', { params:  { q: query, page: 1, sort: 'recent' } })
-        history.push({
-            pathname: `/q/search`,
-            search: `?q=${query}`,
-            state: search.data
-        })
-    });
 
     return (
         <NavContainer>
@@ -44,11 +31,11 @@ export default function Nav({ sidebarStatus, setSidebarStatus, history }) {
                         <MenuIcon fontSize='large'/>
                     </IconButton>
                 </MenuItem>
-                <MenuItem>
+                {/* <MenuItem>
                     <Link to="/">
                         <Logo src={logo}/>
                     </Link>
-                </MenuItem>
+                </MenuItem> */}
             </MenuHolder>
             <Searchbar setQuery={setQuery} />
             <UnorderedList>
