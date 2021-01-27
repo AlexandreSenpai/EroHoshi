@@ -28,7 +28,7 @@ export const ListItem = styled.li`
     align-items: center;
 
     svg{
-        color: #e72b69;
+        color: #0054c2;
         margin-right: 1rem;
     }
 

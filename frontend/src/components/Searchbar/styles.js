@@ -4,7 +4,7 @@ export const SearchContainer = styled.div`
     width: 100rem;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
-    background: #e72b69;
+    background: #ff6a00;
     display: flex;
     align-items: center;
     justify-items: space-between;

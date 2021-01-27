@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 
 export default function FlySidebar({ sidebarStatus, setSidebarStatus }){
     return(
-        <SidebarContainer sidebarStatus={sidebarStatus === true && window.innerWidth <= 470 ? 'block' : 'none'}>
+        <SidebarContainer sidebarStatus={sidebarStatus === true ? 'block' : 'none'}>
             <MenuHolder>
                 <IconButton size="small" color="inherit" onClick={() => setSidebarStatus(!sidebarStatus)}>
                     <Clear color="inherit" fontSize="large" />

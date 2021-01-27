@@ -24,7 +24,7 @@ export const TitleSectionContainer = styled.div`
     display: flex;
     font-size: 3rem;
     align-items: center;
-    color: #e72b69;
+    color: #0054c2;
 
     @media screen and (max-width: 414px) {
         justify-content: center;

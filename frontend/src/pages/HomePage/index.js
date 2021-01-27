@@ -7,7 +7,7 @@ import { uid } from 'uid';
 import Section from '../../components/Section';
 import Thumb from '../../components/Thumb';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import WhatshotIcon from '@material-ui/icons/Whatshot';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import InfiniteScroller from '../../components/InfiniteScroller';
 import PlaceholderLoader from '../../components/Placeholder';
 
@@ -59,7 +59,7 @@ export default function HomePage() {
 
     return(
         <HomeContainer>
-            <Section SectionTitle="Popular" TitleIcon={WhatshotIcon} Content={Popular} />
+            <Section SectionTitle="Trending" TitleIcon={TrendingUpIcon} Content={Popular} />
             <Section 
                 SectionTitle="Newest" 
                 TitleIcon={AccessTimeIcon} 

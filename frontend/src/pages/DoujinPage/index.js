@@ -49,7 +49,8 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const [score, setScore] = useState(0);
     const [createdDate, setCreatedDate] = useState(null);
     const [views, setViews] = useState(0);
-    const [canLike, setCanLike] = useState(true);
+    const [canLike, setCanLike] = useState(false);
+    const [canDislike, setCanDislike] = useState(false);
     const [likes, setLikes] = useState([]);
     const [dislikes, setDislikes] = useState([]);
     const [showMore, setShowMore] = useState(false);
@@ -64,13 +65,20 @@ export default function DoujinPage({ computedMatch, location, history }) {
         if(likes.indexOf(uuid) === -1){
             setCanLike(true);
         }
+        if(dislikes.indexOf(uuid) === -1){
+            setCanDislike(true);
+        }
     }, [uuid, likes])
 
     useTitle(title);
     useScrollbar();
 
-    const handle_like = () => {
-        api.post('/like', { 'uid': uuid, doujinId: ID.toString() });
+    const handle_like = (method) => {
+        if(method === 'like'){
+            api.post('/like', { 'uid': uuid, doujinId: ID.toString() });
+        }else{
+            api.post('/dislike', { 'uid': uuid, doujinId: ID.toString() });
+        }
     }
 
     const to_read = (index) => {
@@ -148,10 +156,10 @@ export default function DoujinPage({ computedMatch, location, history }) {
                                 <Score>{score}</Score>
                             </RatingHolder>
                             <ButtonsContainer>
-                                <Button background="#e72b69" disabled={!canLike} onClick={handle_like}>
+                                <Button background="#ff6a00" disabled={!canLike} onClick={() => handle_like('like')}>
                                     <ThumbUpIcon /> Like ({likes.length})
                                 </Button>
-                                <Button background="#e72b696d">
+                                <Button background="#ff6a006d" disabled={!canDislike} onClick={() => handle_like('dislike')}>
                                     <ThumbDownIcon /> Dislike ({dislikes.length})
                                 </Button>
                             </ButtonsContainer>
@@ -179,7 +187,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
                       ))
                 }
                 <ReadMoreHolder>
-                    <Button background="#e72b69" color="inherit" onClick={toggle_show}>
+                    <Button background="#ff6a00" color="inherit" onClick={toggle_show}>
                         <MoreHorizIcon color="inherit" fontSize="large" /> 
                         {showMore === false ? "Show More" : "Show Less"}
                     </Button>
