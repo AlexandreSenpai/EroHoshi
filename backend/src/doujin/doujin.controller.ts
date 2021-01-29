@@ -4,31 +4,40 @@ import {
     Controller,
     DefaultValuePipe,
     Get,
-    HttpException,
     HttpStatus,
-    ParseArrayPipe,
     ParseIntPipe,
     Post,
     Query,
+    ValidationPipe,
 } from '@nestjs/common';
 import { Doujin } from './doujin.factory';
 import { DoujinProvider } from './doujin-provider';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { HttpLike, DoujinResponse } from './doujin.interface';
+import { HttpLike, DoujinResponse, IDoujin } from './doujin.interface';
 import { DoujinResponseImpl } from './doujinResponse.factory';
+import { SonicProvider } from 'src/sonic/sonic-provider';
 
 @Controller()
 export class DoujinController {
-    constructor(private provider: DoujinProvider) {}
-    @Get('doujin')
-    async getDoujinById(@Query('id') id: string): Promise<Doujin> {
-        if (!id) {
-            throw new HttpException(
-                { error: 'You must provide a doujinshi identifier.' },
-                HttpStatus.BAD_REQUEST,
-            );
-        }
+    constructor(
+        private provider: DoujinProvider,
+        private searchProvider: SonicProvider,
+    ) {}
 
+    @Get('doujin')
+    async getDoujinById(
+        @Query(
+            'id',
+            new ValidationPipe({
+                errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+                exceptionFactory: () =>
+                    new BadRequestException(
+                        'You must provide a doujinshi identifier.',
+                    ),
+            }),
+        )
+        id: string,
+    ): Promise<Doujin> {
         return Doujin.from(await this.provider.findById(id));
     }
 
@@ -50,14 +59,12 @@ export class DoujinController {
     @Get()
     async getNewestDoujins(
         @Query('last_id') lastId: string,
-    ): Promise<{ doujins: DoujinResponse[] }> {
+    ): Promise<DoujinResponse[]> {
         const doujins = await this.provider.findAllOrderBy(lastId, 'id', 18);
 
-        return {
-            doujins: doujins.map((doujin) => {
-                return DoujinResponseImpl.from(doujin);
-            }),
-        };
+        return doujins.map((doujin) => {
+            return DoujinResponseImpl.from(doujin);
+        });
     }
 
     @Get('popular')
@@ -65,27 +72,23 @@ export class DoujinController {
         @Query('last_id') lastId: string,
         @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
         @Query('field', new DefaultValuePipe('views')) field: string,
-    ): Promise<{ doujins: DoujinResponse[] }> {
+    ): Promise<DoujinResponse[]> {
         const doujins = await this.provider.findAllOrderBy(
             lastId,
             field,
             limit,
         );
 
-        return {
-            doujins: doujins.map((doujin) => {
-                return DoujinResponseImpl.from(doujin);
-            }),
-        };
+        return doujins.map((doujin) => {
+            return DoujinResponseImpl.from(doujin);
+        });
     }
 
     @Get('search')
     async searchDoujin(
         @Query(
             'q',
-            new ParseArrayPipe({
-                items: String,
-                separator: ' ',
+            new ValidationPipe({
                 errorHttpStatusCode: HttpStatus.BAD_REQUEST,
                 exceptionFactory: () =>
                     new BadRequestException(
@@ -93,14 +96,17 @@ export class DoujinController {
                     ),
             }),
         )
-        tags: string[],
-        @Query('last_id') lastId: string,
-        @Query('sort', new DefaultValuePipe('recent')) sort: string,
+        tags: string,
+        @Query('limit', new DefaultValuePipe(18), ParseIntPipe) limit: number,
+        @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
     ): Promise<DoujinResponse[]> {
-        const doujins = await this.provider.findAllByTag(tags, lastId, sort);
+        const doujinIds = await this.searchProvider.query(tags, limit, offset);
 
-        return doujins.map((doujin) => {
-            return DoujinResponseImpl.from(doujin);
-        });
+        const promises: Promise<IDoujin>[] = doujinIds.map((id) =>
+            this.provider.findById(id),
+        );
+        return (await Promise.all(promises)).map((doujin) =>
+            DoujinResponseImpl.from(doujin),
+        );
     }
 }
