@@ -52,13 +52,13 @@ export class DoujinProvider {
             Math.random() * summaryCounter.max_id,
         ).toString();
 
-        let doujin = this.findById(randomId.toString());
+        let doujin = await this.findById(randomId.toString());
 
         while (!doujin) {
             randomId = Math.floor(
                 Math.random() * summaryCounter.max_id,
             ).toString();
-            doujin = this.findById(randomId);
+            doujin = await this.findById(randomId);
         }
 
         this.incrementDoujinViews(randomId);
