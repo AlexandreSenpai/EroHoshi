@@ -31,6 +31,10 @@ export interface HttpLike {
     uid: string;
 }
 
+export interface ScoreResponse {
+    score: number;
+}
+
 export interface DoujinResponse {
     id: string;
     title: string;

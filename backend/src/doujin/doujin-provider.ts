@@ -66,7 +66,7 @@ export class DoujinProvider {
         return doujin;
     }
 
-    async likeDoujin(doujinId: string, uid: string) {
+    async likeDoujin(doujinId: string, uid: string): Promise<number> {
         const ref = admin.firestore().collection('doujins').doc(doujinId);
 
         const doujin = (await ref.get().then((doc) => doc.data())) as IDoujin;
@@ -89,9 +89,11 @@ export class DoujinProvider {
                     ? doujin.dislikes.filter((item) => item !== uid)
                     : doujin.dislikes,
         });
+
+        return +(this.scoreCalc(likes, likes + dislikes, 0.97) * 10).toFixed(1);
     }
 
-    async dislikeDoujin(doujinId: string, uid: string) {
+    async dislikeDoujin(doujinId: string, uid: string): Promise<number> {
         const ref = admin.firestore().collection('doujins').doc(doujinId);
 
         const doujin = (await ref.get().then((doc) => doc.data())) as IDoujin;
@@ -110,11 +112,13 @@ export class DoujinProvider {
                 doujin.likes.indexOf(uid) !== -1
                     ? doujin.likes.filter((item) => item !== uid)
                     : doujin.likes,
-            score: Math.ceil(
-                this.scoreCalc(likes, likes + dislikes, 0.97) * 100,
-            ),
+            score: +(
+                this.scoreCalc(likes, likes + dislikes, 0.97) * 10
+            ).toFixed(1),
             dislikes: [...doujin.dislikes, uid],
         });
+
+        return +(this.scoreCalc(likes, likes + dislikes, 0.97) * 10).toFixed(1);
     }
 
     async findAllOrderBy(

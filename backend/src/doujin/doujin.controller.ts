@@ -12,8 +12,14 @@ import {
 } from '@nestjs/common';
 import { Doujin } from './doujin.factory';
 import { DoujinProvider } from './doujin-provider';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { HttpLike, DoujinResponse, IDoujin } from './doujin.interface';
+import {
+    HttpLike,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    DoujinResponse,
+    IDoujin,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ScoreResponse,
+} from './doujin.interface';
 import { DoujinResponseImpl } from './doujin-response.factory';
 import { SonicProvider } from 'src/sonic/sonic-provider';
 
@@ -47,13 +53,23 @@ export class DoujinController {
     }
 
     @Post('like')
-    async likeDoujin(@Body() httpLike: HttpLike): Promise<void> {
-        this.provider.likeDoujin(httpLike.doujinId, httpLike.uid);
+    async likeDoujin(@Body() httpLike: HttpLike): Promise<ScoreResponse> {
+        return {
+            score: await this.provider.likeDoujin(
+                httpLike.doujinId,
+                httpLike.uid,
+            ),
+        };
     }
 
     @Post('dislike')
-    async dislikeDoujin(@Body() httpLike: HttpLike): Promise<void> {
-        this.provider.dislikeDoujin(httpLike.doujinId, httpLike.uid);
+    async dislikeDoujin(@Body() httpLike: HttpLike): Promise<ScoreResponse> {
+        return {
+            score: await this.provider.dislikeDoujin(
+                httpLike.doujinId,
+                httpLike.uid,
+            ),
+        };
     }
 
     @Get()
