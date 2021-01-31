@@ -14,7 +14,7 @@ import { Doujin } from './doujin.factory';
 import { DoujinProvider } from './doujin-provider';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpLike, DoujinResponse, IDoujin } from './doujin.interface';
-import { DoujinResponseImpl } from './doujinResponse.factory';
+import { DoujinResponseImpl } from './doujin-response.factory';
 import { SonicProvider } from 'src/sonic/sonic-provider';
 
 @Controller()
@@ -98,7 +98,8 @@ export class DoujinController {
         )
         tags: string,
         @Query('limit', new DefaultValuePipe(18), ParseIntPipe) limit: number,
-        @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+        // This field should be named "offset", and it is not for backend <-> frontend concern purposes
+        @Query('last_id', new DefaultValuePipe(0), ParseIntPipe) offset: number,
     ): Promise<DoujinResponse[]> {
         const doujinIds = await this.searchProvider.query(tags, limit, offset);
 
