@@ -11,12 +11,13 @@ export const DoujinContainer = styled.div`
 
 export const HeaderContainer = styled.div`
     width: 100%;
-    background: #2c2c2c;
+    background: #242426;
     display: flex;
     align-items: center;
     padding: 3rem;
     flex-direction: column;
     margin-bottom: 2rem;
+    border: 1px solid #0000006d;
 `;
 
 export const Text = styled.p`
