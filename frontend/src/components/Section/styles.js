@@ -6,6 +6,7 @@ export const SectionContainer = styled.section`
     margin: 2rem 2rem 2rem 0;
     background: #242426;
     border-radius: 5px;
+    border: 1px solid #0000006d;
 
     @media screen and (max-width: 414px) {
         margin: 2rem 0rem;

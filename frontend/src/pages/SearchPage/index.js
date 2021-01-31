@@ -24,13 +24,17 @@ export default function SearchPage({ computedMatch, location }) {
     }, [location.search]);
     
     const get_doujins = useCallback(() => {
-        var [_, query_str] =  location.search.split("=")
-        setQuery(query_str);
+        if(location.state){
+            setQuery(location.state.query);
+        }else{
+            let [_, query_str] =  location.search.split("=")
+            setQuery(query_str.split('%20').join(' '));
+        }
     }, [location.search]);
 
     const UpdatedScroller = useCallback(() => {
         return(
-            <InfiniteScroller path='/search' aditional_body={{q: query, sort}} />
+            <InfiniteScroller path='/search' aditional_body={{q: query, sort}} paginate_mode="offset" />
         );
     }, [query])
 
@@ -39,11 +43,11 @@ export default function SearchPage({ computedMatch, location }) {
             <HeaderContainer>
                 <TitleContent>
                     <TitleContainer>
-                            {
-                                query 
-                                ? <Title>Results for: {query}</Title>
-                                : <Title>There's no matches for your query...</Title>
-                            }
+                        {
+                            query 
+                            ? <Title>Results for: {query}</Title>
+                            : <Title>There's no matches for your query...</Title>
+                        }
                     </TitleContainer>
                 </TitleContent>
                 <AditionalContainer>

@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import Nav from '../Nav';
+import TopLoader from '../TopLoader';
 import FlySidebar from '../FlySidebar';
 
 import { Container } from './styles';
 import GlobalStyle from '../../static/GlobalStyle';
 import { MainContainer } from '../Main/styles';
+
+import LoaderProvider from '../../contexts/loader';
 
 export default function ContainerWrapper({ children, ...rest }) {
 
@@ -12,12 +15,15 @@ export default function ContainerWrapper({ children, ...rest }) {
 
     return (
         <Container>
-            <GlobalStyle />
-            <Nav sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
-            <MainContainer>
-                <FlySidebar sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus}/>
-                {children}
-            </MainContainer>
+            <LoaderProvider>
+                <GlobalStyle />
+                <TopLoader />
+                <Nav sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
+                <FlySidebar sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
+                <MainContainer>
+                    {children}
+                </MainContainer>
+            </LoaderProvider>
         </Container>
     )
 }

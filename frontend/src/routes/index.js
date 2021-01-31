@@ -20,7 +20,7 @@ export default function Routes(){
     )
 
     return(
-        <Router>
+        <Router forceRefresh={true}>
             <Switch>
                 <Rota path="/" exact component={Home} />
                 <Rota path="/d/:id" component={DoujinPage} />

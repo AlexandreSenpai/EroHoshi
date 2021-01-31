@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { api, axios_object } from '../../services/api';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { api } from '../../services/api';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import Cookie from 'js-cookies';
@@ -7,6 +7,8 @@ import { uid } from 'uid';
 import useTitle from '../../hooks/useTitle';
 import useScrollbar from '../../hooks/useScrollbar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import Comentaries from '../../components/Comentaries';
+import { LoaderContext } from '../../contexts/loader';
 
 import {
     DoujinContainer,
@@ -29,7 +31,8 @@ import {
     Button,
     ButtonsContainer,
     PostInformation,
-    ReadMoreHolder
+    ReadMoreHolder,
+    Tag
 } from './styles';
 
 
@@ -54,6 +57,10 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const [likes, setLikes] = useState([]);
     const [dislikes, setDislikes] = useState([]);
     const [showMore, setShowMore] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [pages, setPages] = useState(0);
+
+    const { setIsLoading } = useContext(LoaderContext);    
 
     let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
 
@@ -68,7 +75,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
         if(dislikes.indexOf(uuid) === -1){
             setCanDislike(true);
         }
-    }, [uuid, likes])
+    }, [uuid, likes]);
 
     useTitle(title);
     useScrollbar();
@@ -103,8 +110,10 @@ export default function DoujinPage({ computedMatch, location, history }) {
         setScore(data.score || 0);
         setViews(data.views || 0);
         setCreatedDate(data.created_date);
-        setLikes(data.likes);
-        setDislikes(data.dislikes);
+        setLikes(data.likes instanceof Array ? data.likes : []);
+        setDislikes(data.dislikes instanceof Array ? data.dislikes : []);
+        setComments(data.comments || []);
+        setPages(data.total_pages);
     }
     
     const toggle_show = () => {
@@ -118,14 +127,16 @@ export default function DoujinPage({ computedMatch, location, history }) {
         if(location.state){
             populate_state(location.state);
         }else{
+            setIsLoading(true);
             api.get(`/doujin`, { params: { id: computedMatch.params.id } }).then(record => {
                 const data = record.data;
                 if(data){
                     populate_state(data);
+                    setIsLoading(false);
                 }
             });
         }
-    });
+    }, [location.state]);
 
     return(
         <DoujinContainer>
@@ -141,14 +152,14 @@ export default function DoujinPage({ computedMatch, location, history }) {
                     </ThumbContainer>
                     <InformationContainer>
                         <InformationHolder>
-                            <Text><strong>Alternative Title:</strong> {secondaryTitle}</Text>
-                            <Text><strong>Artists:</strong> {artists.join(', ')}</Text>
-                            <Text><strong>Languages:</strong> {languages.join(', ')}</Text>
-                            <Text><strong>Categories:</strong> {categories.join(', ')}</Text>
-                            <Text><strong>Characters:</strong> {characters.join(', ')}</Text>
-                            <Text><strong>Parodies:</strong> {parodies.join(', ')}</Text>
-                            <Text><strong>Groups:</strong> {groups.join(', ')}</Text>
-                            <Text><strong>Tags:</strong> {tags.join(', ')}</Text>
+                            <div><Text><strong>Alternative Title:</strong> {secondaryTitle}</Text></div>
+                            <div><Text><strong>Artists:</strong></Text>{artists.length > 0 ? artists.map(artist => {return <Tag>{artist}</Tag>}) : null}</div>
+                            <div><Text><strong>Languages:</strong></Text> {languages.length > 0 ? languages.map(language => {return <Tag>{language}</Tag>}) : null}</div>
+                            <div><Text><strong>Categories:</strong></Text> {categories.length > 0 ? categories.map(category => {return <Tag>{category}</Tag>}) : null}</div>
+                            <div><Text><strong>Characters:</strong></Text> {characters.length > 0 ? characters.map(artist => {return <Tag>{artist}</Tag>}) : null}</div>
+                            <div><Text><strong>Parodies:</strong></Text> {parodies.length > 0 ? parodies.map(parody => {return <Tag>{parody}</Tag>}) : null}</div>
+                            <div><Text><strong>Groups:</strong></Text> {groups.length > 0 ? groups.map(group => {return <Tag>{group}</Tag>}) : null}</div>
+                            <div><Text><strong>Tags:</strong></Text> {tags.length > 0 ? tags.map(tag => {return <Tag>{tag}</Tag>}) : null}</div>
                         </InformationHolder>
                         <AditionalInformationHolder>
                             <RatingHolder>
@@ -159,13 +170,14 @@ export default function DoujinPage({ computedMatch, location, history }) {
                                 <Button background="#ff6a00" disabled={!canLike} onClick={() => handle_like('like')}>
                                     <ThumbUpIcon /> Like ({likes.length})
                                 </Button>
-                                <Button background="#ff6a006d" disabled={!canDislike} onClick={() => handle_like('dislike')}>
+                                <Button background="#ff6a00" disabled={!canDislike} onClick={() => handle_like('dislike')}>
                                     <ThumbDownIcon /> Dislike ({dislikes.length})
                                 </Button>
                             </ButtonsContainer>
                             <PostInformation>
                                 <Text>ID: {ID}</Text>
                                 <Text>Upload date: {createdDate}</Text>
+                                <Text>Pages: {pages}</Text>
                                 <Text>Views: {views}</Text>
                             </PostInformation>
                         </AditionalInformationHolder>
@@ -193,6 +205,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
                     </Button>
                 </ReadMoreHolder>
             </GalleryContainer>
+            {/* <Comentaries doujin_id={ID} comments={comments}/> */}
         </DoujinContainer>
     )
 }

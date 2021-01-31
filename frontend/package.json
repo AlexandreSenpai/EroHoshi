@@ -12,16 +12,15 @@
     "history": "^5.0.0",
     "js-cookies": "^1.0.4",
     "react": "^17.0.1",
-    "react-content-loader": "^6.0.1",
     "react-dom": "^17.0.1",
     "react-loading-skeleton": "^2.1.1",
     "react-paginate": "^7.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
-    "react-top-loading-bar": "^2.0.1",
-    "semantic-ui-react": "^2.0.3",
+    "react-top-loader": "^1.0.0",
     "styled-components": "^5.2.1",
     "uid": "^2.0.0",
+    "uniqid": "^5.2.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

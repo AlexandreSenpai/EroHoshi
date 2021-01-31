@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 
 export const SidebarContainer = styled.aside`
-    top: 0;    
+    top: 0;
     min-width: 25rem;
     min-height: 100vh;
     height: 100%;
     background: #242426;
     padding: 2rem 0;
-    display: ${props => props.sidebarStatus};
+    transition: 150ms ease-out;
     position: fixed;
     z-index: 9999;
+    left: ${props => props.sidebarStatus};
 `;
 
 export const UnorderedList = styled.ul`
@@ -50,3 +51,4 @@ export const MenuHolder = styled.div`
     padding: 1rem 4rem;
     justify-content: flex-end;
 `;
+

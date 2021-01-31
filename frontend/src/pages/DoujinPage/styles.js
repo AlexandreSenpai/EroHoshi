@@ -11,12 +11,10 @@ export const DoujinContainer = styled.div`
 
 export const HeaderContainer = styled.div`
     width: 100%;
-    background: #242426d;
     display: flex;
     align-items: center;
-    padding: 3rem;
+    margin: 3rem 3rem 1rem 3rem;
     flex-direction: column;
-    margin-bottom: 2rem;
 
 `;
 
@@ -27,6 +25,7 @@ export const ThumbContainer = styled.div`
     margin: 1rem;
     border-radius: 4px;
     padding: 2rem;
+    border: 1px solid #0000006d;
 `;
 
 export const ThumbImage = styled.img`
@@ -44,6 +43,7 @@ export const InformationContainer = styled.div`
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
+    border: 1px solid #0000006d;
     
     @media screen and (max-width: 414px) {
         flex-direction: column;
@@ -57,6 +57,12 @@ export const InformationHolder = styled.div`
     justify-content: center;
     width: 60%;
     height: 100%;
+
+    div{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
 
     @media screen and (max-width: 414px) {
         width: 100%;
@@ -84,6 +90,8 @@ export const RatingHolder = styled.div`
     background: #242426;
 
     p{
+        width: 100%;
+        justify-content: center;
         font-size: 3rem;
         text-align: center;
     }
@@ -92,10 +100,13 @@ export const RatingHolder = styled.div`
 export const Text = styled.p`
     font-size: 1.5rem;
     padding: 1rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 `
 
 export const Score = styled.p`
-    font-size: 4rem !important;
+    font-size: 5rem !important;
     padding: 1rem;
     color: #ff6a00;
 `
@@ -181,7 +192,7 @@ export const Button = styled.button`
     align-items: center;
 
     :disabled{
-        background: ${props => props.background}6d;
+        background: #ff6a006d;
     }
 
     :hover{
@@ -196,9 +207,9 @@ export const Button = styled.button`
 
 export const PostInformation = styled.div`
     width: 15rem;
-    p{
-        font-size: 1.3rem;
-        opacity: .6;
+    ${Text}{
+        font-size: 1.2rem;
+        opacity: .5;
         padding: .1rem;
     }
 `;
@@ -208,4 +219,25 @@ export const ReadMoreHolder = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+`;
+
+export const Tag = styled.div`
+    display: flex;
+    height: 2.5rem;
+    justify-content: center;
+    align-items: center;
+    align-text: center;
+    background: #18191A;
+    border-radius: 5rem;
+    padding: 0rem .5rem;
+    font-size: 1.2rem;
+    border: 1px solid #0000006d;
+    color: #ff6a00;
+    cursor: pointer;
+    margin: .1rem;
+    transition: 60ms ease-in;
+
+    :hover{
+        opacity: .8;
+    }
 `;
