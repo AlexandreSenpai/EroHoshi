@@ -8,22 +8,25 @@ import GlobalStyle from '../../static/GlobalStyle';
 import { MainContainer } from '../Main/styles';
 
 import LoaderProvider from '../../contexts/loader';
+import AuthProvider from '../../contexts/auth';
 
-export default function ContainerWrapper({ children, ...rest }) {
+export default function ContainerWrapper({ children, navbar, ...rest }) {
 
     const [sidebarStatus, setSidebarStatus] = useState(false);
 
     return (
         <Container>
-            <LoaderProvider>
-                <GlobalStyle />
-                <TopLoader />
-                <Nav sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
-                <FlySidebar sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
-                <MainContainer>
-                    {children}
-                </MainContainer>
-            </LoaderProvider>
+            <AuthProvider>
+                <LoaderProvider>
+                    <GlobalStyle />
+                    <TopLoader />
+                    <Nav navbarStatus={navbar} sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
+                    <FlySidebar sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} {...rest} />
+                    <MainContainer>
+                        {children}
+                    </MainContainer>
+                </LoaderProvider>
+            </AuthProvider>
         </Container>
     )
 }

@@ -7,13 +7,7 @@ export const SearchContainer = styled.div`
     background: #ff6a00;
     display: flex;
     align-items: center;
-    background: red;
     font-size: 2rem;
-    margin: 0rem 15rem 0rem 2rem;
-
-    @media screen and (max-width: 414px) {
-        margin: 0rem 2rem 0rem 0rem;
-    }
 `;
 
 export const SearchInput = styled.input`

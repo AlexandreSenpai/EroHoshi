@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const SidebarContainer = styled.aside`
     top: 0;
-    min-width: 25rem;
+    width: 25rem;
     min-height: 100vh;
     height: 100%;
     background: #242426;
@@ -52,3 +52,38 @@ export const MenuHolder = styled.div`
     justify-content: flex-end;
 `;
 
+export const UserHolder = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #18191A;
+    margin: 1rem 0rem;
+`;
+
+export const UserAvatar = styled.img`
+    min-width: 5rem;
+    height: 5rem;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #0000006d;
+    margin-right: 1rem;
+`;
+
+export const UserGreetings = styled.div`
+    max-width: 16rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+    color: #f1f1f14d;
+
+    span{
+        color: #ff6a00;
+        font-weight: bolder;
+        opacity: 1;
+        font-size: 1.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+`;

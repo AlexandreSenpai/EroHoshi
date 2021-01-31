@@ -4,7 +4,7 @@ export const NavContainer = styled.nav`
     width: 100%;
     height: 5rem;
     position: fixed;
-    display: flex;
+    display: ${props => props.display};
     z-index: 9999;
     align-items: center;
     background: #242426;
@@ -42,4 +42,17 @@ export const MenuHolder = styled.div`
 export const MenuItem = styled.div`
     margin: 0 1rem;
     padding: 1.5rem 0rem;
+`;
+
+export const UserAvatar = styled.img`
+    min-width: 4rem;
+    height: 4rem;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #0000006d;
+    margin-right: 1rem;
+
+    @media screen and (max-width: 414px) {
+        display: none;
+    }
 `;
