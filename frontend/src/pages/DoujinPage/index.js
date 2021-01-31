@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { api } from '../../services/api';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import Cookie from 'js-cookies';
-import { uid } from 'uid';
 import useTitle from '../../hooks/useTitle';
 import useScrollbar from '../../hooks/useScrollbar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -64,29 +62,29 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const { setIsLoading } = useContext(LoaderContext);    
     const { currentUser } = useContext(AuthContext);    
 
-    let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
-
     useEffect(() => {
         get_doujins();
     }, [location]);
 
     useEffect(() => {
-        if(likes.indexOf(uuid) === -1){
-            setCanLike(true);
+        if(currentUser){
+            if(likes.indexOf(currentUser.uid) === -1){
+                setCanLike(true);
+            }
+            if(dislikes.indexOf(currentUser.uid) === -1){
+                setCanDislike(true);
+            }
         }
-        if(dislikes.indexOf(uuid) === -1){
-            setCanDislike(true);
-        }
-    }, [uuid, likes]);
+    }, [currentUser, likes]);
 
     useTitle(title);
     useScrollbar();
 
     const handle_like = (method) => {
         if(method === 'like'){
-            api.post('/like', { 'uid': uuid, doujinId: ID.toString() });
+            api.post('/like', { 'uid': currentUser.uid, doujinId: ID.toString() });
         }else{
-            api.post('/dislike', { 'uid': uuid, doujinId: ID.toString() });
+            api.post('/dislike', { 'uid': currentUser.uid, doujinId: ID.toString() });
         }
     }
 

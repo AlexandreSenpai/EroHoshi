@@ -56,3 +56,15 @@ export const UserAvatar = styled.img`
         display: none;
     }
 `;
+
+export const LoginButton = styled.button`
+    width: 10rem;
+    border: none;
+    background: #ff6a00;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f1f1f1;
+    font-weight: bolder;
+`;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link
+ } from 'react-router-dom';
 import Searchbar from '../Searchbar';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,7 +14,8 @@ import {
     MenuHolder, 
     MenuItem,
     UnorderedList,
-    UserAvatar
+    UserAvatar,
+    LoginButton
 } from './styles';
 import { ListItem } from '@material-ui/core';
 
@@ -49,7 +51,8 @@ export default function Nav({ sidebarStatus, setSidebarStatus, navbarStatus, his
             <Searchbar setQuery={setQuery} />
             <UnorderedList>
                 <ListItem>
-                    <UserAvatar src={currentUser ? currentUser.photoURL : ''}/>
+                    {/* <UserAvatar src={currentUser ? currentUser.photoURL : ''}/> */}
+                    <LoginButton>Login</LoginButton>
                 </ListItem>
             </UnorderedList>
         </NavContainer>

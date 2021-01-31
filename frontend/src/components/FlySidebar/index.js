@@ -46,14 +46,12 @@ export default function FlySidebar({ sidebarStatus, setSidebarStatus, history })
                     <Clear color="inherit" fontSize="large" />
                 </IconButton>
             </MenuHolder>
-            {currentUser 
-                ?   <UserHolder>
-                        <UserAvatar src={currentUser.photoURL}/>
-                        <UserGreetings>
-                            Welcome back,<span>{currentUser.displayName}</span>
-                        </UserGreetings>
-                    </UserHolder>
-                : null}
+                <UserHolder>
+                    <UserAvatar src={currentUser ? currentUser.photoURL : "https://previews.123rf.com/images/apoev/apoev1709/apoev170900088/85467744-default-avatar-anime-girl-profile-icon-grey-photo-manga-placeholder.jpg"}/>
+                    <UserGreetings>
+                        Welcome back,<span>{currentUser ? currentUser.displayName : "Guest"}</span>
+                    </UserGreetings>
+                </UserHolder>
             <UnorderedList>
                 <ListItem onClick={handle_random}><AllInclusiveIcon fontSize='large' color='inherit'/> Random</ListItem>
                 {/* <ListItem><InfoIcon fontSize='large' color='inherit'/> Information</ListItem> */}
