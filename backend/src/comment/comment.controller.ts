@@ -1,7 +1,17 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import {
+    Controller,
+    Delete,
+    HttpException,
+    HttpStatus,
+    Param,
+    Post,
+    Req,
+} from '@nestjs/common';
+import { Request } from 'express';
 import Answer from './answer';
 import { Comment } from './comment';
 import { CommentProvider } from './comment-provider';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpBodyComment } from './comment.interface';
 
 @Controller('comment')
@@ -9,19 +19,25 @@ export class CommentController {
     constructor(private provider: CommentProvider) {}
 
     @Post()
-    async postComment(@Body() body: HttpBodyComment): Promise<Comment> {
-        return this.provider.save(body.doujinId, Comment.from(body, '1'));
+    async postComment(
+        @Req() req: Request<any, any, HttpBodyComment>,
+    ): Promise<Comment> {
+        console.log(req.body);
+        return this.provider.save(
+            req.body.doujinId,
+            Comment.from(req.body, req.body.userId),
+        );
     }
 
     @Post(':commentId')
     async postAnswer(
         @Param('commentId') commentId: string,
-        @Body() body: HttpBodyComment,
+        @Req() req: Request<any, any, HttpBodyComment>,
     ): Promise<Answer> {
         return await this.provider.saveAnswer(
-            body.doujinId,
+            req.body.doujinId,
             commentId,
-            Answer.from(body.text, 'id'),
+            Answer.from(req.body.text, req.body.userId),
         );
     }
 
@@ -29,8 +45,13 @@ export class CommentController {
     async deleteComment(
         @Param('doujinId') doujinId: string,
         @Param('commentId') commentId: string,
+        @Req() req: Request<any, any, HttpBodyComment>,
     ) {
-        this.provider.delete(doujinId, commentId);
+        try {
+            await this.provider.delete(doujinId, commentId, req.body.userId);
+        } catch (e) {
+            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Delete(':doujinId/:commentId/:answerId')
@@ -38,7 +59,17 @@ export class CommentController {
         @Param('doujinId') doujinId: string,
         @Param('commentId') commentId: string,
         @Param('answerId') answerId: string,
+        @Req() req: Request<any, any, HttpBodyComment>,
     ) {
-        this.provider.deleteAnswer(doujinId, commentId, answerId);
+        try {
+            await this.provider.deleteAnswer(
+                doujinId,
+                commentId,
+                answerId,
+                req.body.userId,
+            );
+        } catch (e) {
+            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -48,7 +48,7 @@ export class CommentProvider {
         return answer;
     }
 
-    async delete(doujinId: string, commentid: string) {
+    async delete(doujinId: string, commentid: string, userId: string) {
         const comments = (await admin
             .firestore()
             .collection('doujins')
@@ -57,7 +57,10 @@ export class CommentProvider {
             .then((doc) => doc.data().comments)) as Comment[];
 
         const comment = comments
-            .filter((item) => item.commentId === commentid)
+            .filter(
+                (item) =>
+                    item.commentId === commentid && item.userId === userId,
+            )
             .pop();
 
         if (comment) {
@@ -68,10 +71,19 @@ export class CommentProvider {
                 .update({
                     comments: admin.firestore.FieldValue.arrayRemove(comment),
                 });
+        } else {
+            throw new Error(
+                'This comment did not exists or you do not have the neccessary permissions to delete it',
+            );
         }
     }
 
-    async deleteAnswer(doujinId: string, commentId: string, answerId: string) {
+    async deleteAnswer(
+        doujinId: string,
+        commentId: string,
+        answerId: string,
+        userId: string,
+    ) {
         const comments = (await admin
             .firestore()
             .collection('doujins')
@@ -81,11 +93,24 @@ export class CommentProvider {
 
         const updatedComments = comments.map((comment) => {
             if (comment.commentId === commentId) {
-                comment.answers = comment.answers.filter(
-                    (answer) => answer.answerId !== answerId,
-                );
-            }
+                const beforeLenght = comment.answers.length;
 
+                comment.answers = comment.answers.filter(
+                    (answer) =>
+                        !(
+                            answer.answerId === answerId &&
+                            answer.userId === userId
+                        ),
+                );
+
+                const afterLenght = comment.answers.length;
+
+                if (beforeLenght === afterLenght) {
+                    throw new Error(
+                        'This answer did not exists or you do not have the neccessary permissions to delete it',
+                    );
+                }
+            }
             return comment;
         });
 
