@@ -22,7 +22,6 @@ export class CommentController {
     async postComment(
         @Req() req: Request<any, any, HttpBodyComment>,
     ): Promise<Comment> {
-        console.log(req.body);
         return this.provider.save(
             req.body.doujinId,
             Comment.from(req.body, req.body.userId),

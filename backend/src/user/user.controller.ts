@@ -1,10 +1,14 @@
 import {
+    BadRequestException,
     Controller,
     Get,
     HttpException,
     HttpStatus,
     Param,
+    ParseArrayPipe,
+    Query,
 } from '@nestjs/common';
+import { get } from 'http';
 import { UserProvider, User } from './user-provider';
 
 @Controller('user')
@@ -20,5 +24,24 @@ export class UserController {
         }
 
         return user;
+    }
+
+    @Get()
+    async getUsersByIds(
+        @Query(
+            'uids',
+            new ParseArrayPipe({
+                items: String,
+                separator: ',',
+                errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+                exceptionFactory: () =>
+                    new BadRequestException(
+                        'Must provide a comma-separatted uids',
+                    ),
+            }),
+        )
+        uids: string[],
+    ): Promise<User[]> {
+        return await this.provider.findAllByIds(uids);
     }
 }

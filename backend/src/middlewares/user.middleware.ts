@@ -40,7 +40,6 @@ export class UserMiddleware implements NestMiddleware {
             req.body.userId = decodedIdToken.uid;
             next();
         } catch (e) {
-            console.log(e.message);
             throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
         }
     }
