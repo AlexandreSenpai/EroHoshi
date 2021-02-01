@@ -10,9 +10,16 @@ import { CommentModule } from './comment/comment.module';
 import { SonicModule } from './sonic/sonic.module';
 import { UserMiddleware } from './middlewares/user.middleware';
 import { CommentController } from './comment/comment.controller';
+import { UserModule } from './user/user.module';
 
 @Module({
-    imports: [DoujinModule, SummaryModule, CommentModule, SonicModule],
+    imports: [
+        DoujinModule,
+        SummaryModule,
+        CommentModule,
+        SonicModule,
+        UserModule,
+    ],
     controllers: [],
     providers: [],
 })
