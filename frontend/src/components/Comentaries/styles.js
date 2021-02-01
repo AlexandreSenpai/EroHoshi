@@ -16,7 +16,7 @@ export const InputContainer = styled.div`
     border: 1px solid #0000006d;
 `;
 
-export const InputHolder = styled.form`
+export const InputHolder = styled.div`
     width: 100%;
     display: flex;
 `;

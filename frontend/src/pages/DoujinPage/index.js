@@ -2,13 +2,12 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { api } from '../../services/api';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import Cookie from 'js-cookies';
-import { uid } from 'uid';
 import useTitle from '../../hooks/useTitle';
 import useScrollbar from '../../hooks/useScrollbar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import Comentaries from '../../components/Comentaries';
 import { LoaderContext } from '../../contexts/loader';
+import { AuthContext } from '../../contexts/auth';
 
 import {
     DoujinContainer,
@@ -61,30 +60,31 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const [pages, setPages] = useState(0);
 
     const { setIsLoading } = useContext(LoaderContext);    
-
-    let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
+    const { currentUser } = useContext(AuthContext);    
 
     useEffect(() => {
         get_doujins();
     }, [location]);
 
     useEffect(() => {
-        if(likes.indexOf(uuid) === -1){
-            setCanLike(true);
+        if(currentUser){
+            if(likes.indexOf(currentUser.uid) === -1){
+                setCanLike(true);
+            }
+            if(dislikes.indexOf(currentUser.uid) === -1){
+                setCanDislike(true);
+            }
         }
-        if(dislikes.indexOf(uuid) === -1){
-            setCanDislike(true);
-        }
-    }, [uuid, likes]);
+    }, [currentUser, likes]);
 
     useTitle(title);
     useScrollbar();
 
     const handle_like = (method) => {
         if(method === 'like'){
-            api.post('/like', { 'uid': uuid, doujinId: ID.toString() });
+            api.post('/like', { 'uid': currentUser.uid, doujinId: ID.toString() });
         }else{
-            api.post('/dislike', { 'uid': uuid, doujinId: ID.toString() });
+            api.post('/dislike', { 'uid': currentUser.uid, doujinId: ID.toString() });
         }
     }
 
@@ -153,13 +153,13 @@ export default function DoujinPage({ computedMatch, location, history }) {
                     <InformationContainer>
                         <InformationHolder>
                             <div><Text><strong>Alternative Title:</strong> {secondaryTitle}</Text></div>
-                            <div><Text><strong>Artists:</strong></Text>{artists.length > 0 ? artists.map(artist => {return <Tag>{artist}</Tag>}) : null}</div>
-                            <div><Text><strong>Languages:</strong></Text> {languages.length > 0 ? languages.map(language => {return <Tag>{language}</Tag>}) : null}</div>
-                            <div><Text><strong>Categories:</strong></Text> {categories.length > 0 ? categories.map(category => {return <Tag>{category}</Tag>}) : null}</div>
-                            <div><Text><strong>Characters:</strong></Text> {characters.length > 0 ? characters.map(artist => {return <Tag>{artist}</Tag>}) : null}</div>
-                            <div><Text><strong>Parodies:</strong></Text> {parodies.length > 0 ? parodies.map(parody => {return <Tag>{parody}</Tag>}) : null}</div>
-                            <div><Text><strong>Groups:</strong></Text> {groups.length > 0 ? groups.map(group => {return <Tag>{group}</Tag>}) : null}</div>
-                            <div><Text><strong>Tags:</strong></Text> {tags.length > 0 ? tags.map(tag => {return <Tag>{tag}</Tag>}) : null}</div>
+                            <div><Text><strong>Artists:</strong></Text>{artists.length > 0 ? artists.map(artist => {return <Tag key={artist}>{artist}</Tag>}) : null}</div>
+                            <div><Text><strong>Languages:</strong></Text> {languages.length > 0 ? languages.map(language => {return <Tag key={language}>{language}</Tag>}) : null}</div>
+                            <div><Text><strong>Categories:</strong></Text> {categories.length > 0 ? categories.map(category => {return <Tag key={category}>{category}</Tag>}) : null}</div>
+                            <div><Text><strong>Characters:</strong></Text> {characters.length > 0 ? characters.map(artist => {return <Tag key={artist}>{artist}</Tag>}) : null}</div>
+                            <div><Text><strong>Parodies:</strong></Text> {parodies.length > 0 ? parodies.map(parody => {return <Tag key={parody}>{parody}</Tag>}) : null}</div>
+                            <div><Text><strong>Groups:</strong></Text> {groups.length > 0 ? groups.map(group => {return <Tag key={group}>{group}</Tag>}) : null}</div>
+                            <div><Text><strong>Tags:</strong></Text> {tags.length > 0 ? tags.map(tag => {return <Tag key={tag}>{tag}</Tag>}) : null}</div>
                         </InformationHolder>
                         <AditionalInformationHolder>
                             <RatingHolder>
@@ -205,7 +205,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
                     </Button>
                 </ReadMoreHolder>
             </GalleryContainer>
-            {/* <Comentaries doujin_id={ID} comments={comments}/> */}
+            <Comentaries user_id={currentUser ? currentUser.uid : null} doujin_id={ID} comments={comments}/>
         </DoujinContainer>
     )
 }

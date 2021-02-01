@@ -3,22 +3,17 @@ import styled from 'styled-components';
 export const SearchContainer = styled.div`
     width: 100%;
     max-width: 100rem;
+    height: 3rem;
     border-radius: 3px;
     background: #ff6a00;
     display: flex;
     align-items: center;
-    background: red;
     font-size: 2rem;
-    margin: 0rem 15rem 0rem 2rem;
-
-    @media screen and (max-width: 414px) {
-        margin: 0rem 2rem 0rem 0rem;
-    }
 `;
 
 export const SearchInput = styled.input`
     width: 93%;
-    height: 3.5rem;
+    height: 100%;
     background: #18191A;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
@@ -34,7 +29,7 @@ export const SearchInput = styled.input`
 
 export const SearchButton = styled.button`
     width: 7%;
-    height: 3.5rem;
+    height: 100%;
     border: none;
     background: #ff6a00;
     border-top-right-radius: 3px;

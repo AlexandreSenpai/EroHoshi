@@ -8,10 +8,12 @@ import SearchPage from '../pages/SearchPage';
 import GalleryPage from '../pages/GalleryPage';
 import MostLiked from '../pages/MostLiked';
 import MostViewed from '../pages/MostViewed';
+import LoginPage from '../pages/LoginPage';
+import SignUpPage from "../pages/SignUpPage";
 
 export default function Routes(){
 
-    const Rota = ({ path: Path, component: Component, sidebar, ...rest }) => (
+    const Rota = ({ path: Path, component: Component, ...rest }) => (
         <Route Path render={props => (
             <Container {...props} {...rest}>
                 <Component {...props} {...rest} />
@@ -22,12 +24,14 @@ export default function Routes(){
     return(
         <Router forceRefresh={true}>
             <Switch>
-                <Rota path="/" exact component={Home} />
-                <Rota path="/d/:id" component={DoujinPage} />
-                <Rota path="/r/:id" component={GalleryPage}/>
-                <Rota path="/s/highscore" component={MostLiked} />
-                <Rota path="/s/views" component={MostViewed} />
-                <Rota path="/q/search" component={SearchPage} />
+                <Rota path="/" exact component={Home} navbar={true}/>
+                <Rota path="/login" component={LoginPage} navbar={false} />
+                <Rota path="/signup" component={SignUpPage} navbar={false} />
+                <Rota path="/d/:id" component={DoujinPage} navbar={true}/>
+                <Rota path="/r/:id" component={GalleryPage} navbar={true}/>
+                <Rota path="/s/highscore" component={MostLiked} navbar={true}/>
+                <Rota path="/s/views" component={MostViewed} navbar={true}/>
+                <Rota path="/q/search" component={SearchPage} navbar={true}/>
             </Switch>
         </Router>
     );

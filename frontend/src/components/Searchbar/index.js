@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { api } from '../../services/api';
 import SearchIcon from '@material-ui/icons/Search';
-import IconButton from '@material-ui/core/IconButton';
 
-import { SearchContainer, SearchInput, SearchButton, Form } from './styles';
+import { SearchContainer, SearchInput, SearchButton } from './styles';
 
 function Searchbar({ setQuery }) {
 

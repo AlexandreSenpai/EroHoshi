@@ -1,9 +1,7 @@
 import React, { useRef } from 'react'
+import uniqid from 'uniqid';
 import SendIcon from '@material-ui/icons/Send';
-// import { api } from '../../services/api';
-// import uniqid from 'uniqid';
-// import { uid } from 'uid';
-// import Cookies from 'js-cookies';
+import { api } from '../../services/api';
 
 import { 
     ComentariesContainer,
@@ -22,20 +20,18 @@ import {
     InputContainer,
     CommentButton} from './styles';
 
-export default function Comentaries({doujin_id, comments}) {;
-
-    // const user_id = Cookies.getItem('uid') ? Cookies.geItem('uid') : Cookies.setItem('uid', uid()); 
+export default function Comentaries({user_id, doujin_id, comments}) {;
 
     const text_ref = useRef(null);
 
-    // const create_commentary = async () => {
-    //     const text = text_ref.current ? text_ref.current.value : null;
-    //     if(text){
-    //         await api.post('/comment', { doujinId: doujin_id, commentId: uniqid(doujin_id + '_'), userId: user_id, timestamp: new Date(), text });
-    //     }else{
-    //         console.log('não há texto.')
-    //     }
-    // }
+    const create_commentary = async () => {
+        const text = text_ref.current ? text_ref.current.value : null;
+        if(text){
+            await api.post('/comment', { doujinId: doujin_id.toString(), userId: user_id, text });
+        }else{
+            console.log('não há texto.')
+        }
+    }
 
     const AnswerObject = ({text, user_name, created_date, avatar}) => {
         return(
@@ -77,9 +73,9 @@ export default function Comentaries({doujin_id, comments}) {;
     return (
         <ComentariesContainer>
             <InputContainer>
-                <InputHolder action='#'>
+                <InputHolder>
                     <Input placeholder="Tell what you think about this piece of cake." wrap="soft" ref={text_ref}/>
-                    <CommentButton><SendIcon fontSize="large"/></CommentButton>
+                    <CommentButton onClick={create_commentary}><SendIcon fontSize="large"/></CommentButton>
                 </InputHolder>
             </InputContainer>
             <ComentariesHolder>

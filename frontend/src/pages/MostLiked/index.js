@@ -1,6 +1,4 @@
 import React from 'react';
-import Cookie from 'js-cookies';
-import { uid } from 'uid';
 
 import Section from '../../components/Section';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -11,8 +9,6 @@ import {
 } from './styles';
 
 export default function MostLiked() {
-
-    let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
 
     return(
         <HomeContainer>
