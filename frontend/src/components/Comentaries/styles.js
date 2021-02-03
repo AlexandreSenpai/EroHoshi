@@ -14,11 +14,29 @@ export const InputContainer = styled.div`
     margin-radius: 3rem;
     padding: 2rem;
     border: 1px solid #0000006d;
-`;
+    text-align: center;
 
-export const InputHolder = styled.div`
-    width: 100%;
-    display: flex;
+    a{
+        color: #ff6a00;
+    }
+
+    form{
+        width: 100%;
+        display: flex;
+    }
+
+    input{
+        width: 95%;
+        min-height: 3.5rem;
+        border-top-left-radius: 5rem;
+        border-bottom-left-radius: 5rem;
+        border: none;
+        background: #18191A;
+        padding: 1rem;
+        color: #f1f1f1;
+        font-family: inherit;
+        resize: none;
+    }
 `;
 
 export const CommentButton = styled.button`
@@ -40,19 +58,6 @@ export const CommentButton = styled.button`
     }
 `;
 
-export const Input = styled.textarea`
-    width: 95%;
-    min-height: 3.5rem;
-    border-top-left-radius: 5rem;
-    border-bottom-left-radius: 5rem;
-    border: none;
-    background: #18191A;
-    padding: 1rem;
-    color: #f1f1f1;
-    font-family: inherit;
-    resize: none;
-`;
-
 export const ComentariesHolder = styled.div`
     width: 100%;
     background: #1d1d1d;
@@ -63,10 +68,6 @@ export const ComentariesHolder = styled.div`
     h2{
         text-align: center;
     }
-`;
-
-export const ComentaryHolder = styled.div`
-    margin: .8rem 0rem;
 `;
 
 export const ComentaryTextHolder = styled.div``;
@@ -82,8 +83,43 @@ export const UserPictureHolder = styled.div`
     overflow: hidden;
     margin-right: 1rem;
 `;
+
 export const UserPicture = styled.img`
     width: 100%;
+`;
+
+export const ComentaryHolder = styled.div`
+    margin: .8rem 0rem;
+
+    form{
+        margin-top: 1rem;
+        padding-left: 6rem;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        
+        ${UserPictureHolder}{
+            max-width: 3rem;
+            max-height: 3rem;
+        }
+
+        ${CommentButton}{
+            min-height: 2.3rem;
+        }
+    }
+
+    input{
+        width: 100%;
+        max-width: 35rem;
+        max-height: 3rem;
+        padding: .5rem;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        border: none;
+        color: #f1f1f1;
+        background: #18191A;
+    }
+
 `;
 
 export const ComentaryText = styled.p`
@@ -109,6 +145,7 @@ export const AnswerHolder = styled.div`
     display: flex;
     align-items: center;
     padding-left: 6rem;
+    margin: .3rem 0rem;
 
     ${UserName}{
         font-size: 1.1rem;
@@ -117,8 +154,8 @@ export const AnswerHolder = styled.div`
         font-size: 1.2rem;
     }
     ${UserPictureHolder}{
-        max-width: 5rem;
-        max-height: 5rem;
+        max-width: 4rem;
+        max-height: 4rem;
     }
 
 `;

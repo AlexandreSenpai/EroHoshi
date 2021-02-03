@@ -11,6 +11,16 @@ export const SidebarContainer = styled.aside`
     position: fixed;
     z-index: 9999;
     left: ${props => props.sidebarStatus};
+    
+    ul:nth-last-child(1){
+        display: none;
+    }
+
+    @media screen and (max-width: 414px) {
+        ul:nth-last-child(1){
+            display: block;
+        }
+    }
 `;
 
 export const UnorderedList = styled.ul`
@@ -27,6 +37,8 @@ export const ListItem = styled.li`
     padding: 1rem 4rem;
     display: flex;
     align-items: center;
+    filter: grayscale(100%);
+    transition: 50ms ease-in;
 
     svg{
         color: #ff6a00;
@@ -36,6 +48,7 @@ export const ListItem = styled.li`
     :hover{
         background: #303030;
         cursor: pointer;
+        filter: grayscale(0%);
     }
 `;
 
@@ -63,6 +76,7 @@ export const UserHolder = styled.div`
 
 export const UserAvatar = styled.img`
     min-width: 5rem;
+    max-width: 5rem;
     height: 5rem;
     overflow: hidden;
     border-radius: 50%;
