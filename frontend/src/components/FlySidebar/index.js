@@ -59,6 +59,12 @@ export default function FlySidebar({ sidebarStatus, setSidebarStatus, history })
         })
     }
 
+    const to_profile = () => {
+        history.push({
+            pathname: `/p/${currentUser.uid}`
+        })
+    }
+
     return(
         <ClickAwayListener onClickAway={handle_click_away} mouseEvent="onMouseDown">
             <SidebarContainer sidebarStatus={sidebarStatus === true ? '0rem' : '-25rem'}>
@@ -96,7 +102,7 @@ export default function FlySidebar({ sidebarStatus, setSidebarStatus, history })
                     
                     {currentUser
                         ?   <Fragment>
-                                <ListItem>
+                                <ListItem onClick={to_profile}>
                                     <AccountBoxIcon color='inherit' fontSize='inherit'/>
                                     <span>
                                         Profile

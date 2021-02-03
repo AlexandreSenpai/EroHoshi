@@ -11,9 +11,11 @@ import { UserOptionsContainer, UnorderedList, ListItem } from './styles';
 
 //contexts
 import { AuthContext } from '../../contexts/auth';
+import { useHistory } from 'react-router-dom';
 
 export default function UserOptions() {
 
+    const history = useHistory();
     const [ checked, setChecked ] = useState(false);
 
     const { currentUser, signOut } = useContext(AuthContext);
@@ -26,6 +28,12 @@ export default function UserOptions() {
         setChecked(false);
     }
 
+    const to_profile = () => {
+        history.push({
+            pathname: `/p/${currentUser.uid}`
+        })
+    }
+
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
             <UserOptionsContainer>
@@ -34,7 +42,7 @@ export default function UserOptions() {
                 </IconButton>
                 <Grow in={checked} style={{ transformOrigin: '500px 0 0' }} {...(checked ? { timeout: 200 } : {})}>
                     <UnorderedList>
-                        <ListItem>
+                        <ListItem onClick={to_profile}>
                             <AccountBoxIcon color='inherit' fontSize='inherit'/>
                             <span>
                                 Profile
