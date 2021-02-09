@@ -44,19 +44,6 @@ export const MenuItem = styled.div`
     padding: 1.5rem 0rem;
 `;
 
-export const UserAvatar = styled.img`
-    min-width: 4rem;
-    height: 4rem;
-    overflow: hidden;
-    border-radius: 50%;
-    border: 1px solid #0000006d;
-    margin-right: 1rem;
-
-    @media screen and (max-width: 414px) {
-        display: none;
-    }
-`;
-
 export const LoginButton = styled.button`
     width: 10rem;
     border: none;
@@ -67,4 +54,14 @@ export const LoginButton = styled.button`
     justify-content: center;
     color: #f1f1f1;
     font-weight: bolder;
+    cursor: pointer;
+    transition: 100ms ease-in;
+
+    :hover{
+        opacity: .5;
+    }
+
+    @media screen and (max-width: 414px) {
+        display: none;
+    }
 `;

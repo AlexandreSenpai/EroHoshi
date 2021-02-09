@@ -60,7 +60,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const [pages, setPages] = useState(0);
 
     const { setIsLoading } = useContext(LoaderContext);    
-    const { currentUser } = useContext(AuthContext);    
+    const { currentUser, userToken } = useContext(AuthContext);    
 
     useEffect(() => {
         get_doujins();
@@ -80,11 +80,26 @@ export default function DoujinPage({ computedMatch, location, history }) {
     useTitle(title);
     useScrollbar();
 
-    const handle_like = (method) => {
+    const handle_like = async (method) => {
+        console.log(userToken);
         if(method === 'like'){
-            api.post('/like', { 'uid': currentUser.uid, doujinId: ID.toString() });
+            const new_score = await api.post('/like', { 'uid': currentUser.uid, doujinId: ID.toString() }, { headers: { Authorization: `Bearer ${userToken}` } });
+            setScore(prevScore => {
+                if(prevScore !== new_score.data.score){
+                    return new_score.data.score
+                }
+                return prevScore
+            });
         }else{
-            api.post('/dislike', { 'uid': currentUser.uid, doujinId: ID.toString() });
+            const new_score = await api.post('/dislike', { 'uid': currentUser.uid, doujinId: ID.toString() }, { headers: { Authorization: `Bearer ${userToken}` } });
+            setScore(prevScore => {
+                if(prevScore !== new_score.data.score){
+                    return new_score.data.score
+                }
+                return prevScore
+            })
+
+
         }
     }
 
@@ -205,7 +220,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
                     </Button>
                 </ReadMoreHolder>
             </GalleryContainer>
-            <Comentaries user_id={currentUser ? currentUser.uid : null} doujin_id={ID} comments={comments}/>
+            <Comentaries user_id={currentUser ? currentUser.uid : null} doujin_id={ID} comments={comments} user_token={userToken} current_user={currentUser}/>
         </DoujinContainer>
     )
 }

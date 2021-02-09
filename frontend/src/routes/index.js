@@ -10,6 +10,7 @@ import MostLiked from '../pages/MostLiked';
 import MostViewed from '../pages/MostViewed';
 import LoginPage from '../pages/LoginPage';
 import SignUpPage from "../pages/SignUpPage";
+import ProfilePage from "../pages/ProfilePage";
 
 export default function Routes(){
 
@@ -27,6 +28,7 @@ export default function Routes(){
                 <Rota path="/" exact component={Home} navbar={true}/>
                 <Rota path="/login" component={LoginPage} navbar={false} />
                 <Rota path="/signup" component={SignUpPage} navbar={false} />
+                <Rota path="/p/:user_id" component={ProfilePage} navbar={true} />
                 <Rota path="/d/:id" component={DoujinPage} navbar={true}/>
                 <Rota path="/r/:id" component={GalleryPage} navbar={true}/>
                 <Rota path="/s/highscore" component={MostLiked} navbar={true}/>

@@ -12,26 +12,26 @@ export const LoginContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-`;
 
-export const LoginForm = styled.form`
-    width: 100%;
-    max-width: 40rem;
+    form{
+        width: 100%;
+        max-width: 40rem;
+    }
+
+    input{
+        width: 100%;
+        height: 3rem;
+        margin: .3rem 0rem;
+        border: none;
+        border-radius: 3px;
+        padding: 1rem;
+    }
 `;
 
 export const LoginHolder = styled.div`
     width: 100%;
     padding: 1rem;
     margin: 1rem 0rem;
-`;
-
-export const LoginInput = styled.input`
-    width: 100%;
-    height: 3rem;
-    margin: .3rem 0rem;
-    border: none;
-    border-radius: 3px;
-    padding: 1rem;
 `;
 
 export const TitleHolder = styled.div`
@@ -74,10 +74,11 @@ export const CheckboxHolder = styled.div`
     display: flex;
     align-items: center;
     margin-top: .3rem;
-`;
 
-export const Checkbox = styled.input`
-    margin-right: .2rem;
+    input{
+        width: 1.5rem;
+        margin-right: .5rem;
+    }
 `;
 
 export const OptionsHolder = styled.div`
