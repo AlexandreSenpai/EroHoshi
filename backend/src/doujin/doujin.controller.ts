@@ -1,27 +1,30 @@
 import {
     BadRequestException,
-    Body,
     Controller,
     DefaultValuePipe,
     Get,
+    HttpException,
     HttpStatus,
     ParseIntPipe,
     Post,
     Query,
+    Req,
     ValidationPipe,
 } from '@nestjs/common';
 import { Doujin } from './doujin.factory';
 import { DoujinProvider } from './doujin-provider';
 import {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     HttpLike,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     DoujinResponse,
     IDoujin,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ScoreResponse,
+    ReactionResponse,
 } from './doujin.interface';
 import { DoujinResponseImpl } from './doujin-response.factory';
 import { SonicProvider } from 'src/sonic/sonic-provider';
+import { Request } from 'express';
 
 @Controller()
 export class DoujinController {
@@ -53,23 +56,41 @@ export class DoujinController {
     }
 
     @Post('like')
-    async likeDoujin(@Body() httpLike: HttpLike): Promise<ScoreResponse> {
-        return {
-            score: await this.provider.likeDoujin(
-                httpLike.doujinId,
-                httpLike.uid,
-            ),
-        };
+    async likeDoujin(
+        @Req() req: Request<any, any, HttpLike>,
+    ): Promise<ReactionResponse> {
+        const reactions = await this.provider.likeDoujin(
+            req.body.doujinId,
+            req.body.userId,
+        );
+
+        if (!reactions) {
+            throw new HttpException(
+                'Provided doujin does not exists',
+                HttpStatus.NOT_FOUND,
+            );
+        }
+
+        return reactions;
     }
 
     @Post('dislike')
-    async dislikeDoujin(@Body() httpLike: HttpLike): Promise<ScoreResponse> {
-        return {
-            score: await this.provider.dislikeDoujin(
-                httpLike.doujinId,
-                httpLike.uid,
-            ),
-        };
+    async dislikeDoujin(
+        @Req() req: Request<any, any, HttpLike>,
+    ): Promise<ReactionResponse> {
+        const reactions = await this.provider.dislikeDoujin(
+            req.body.doujinId,
+            req.body.userId,
+        );
+
+        if (!reactions) {
+            throw new HttpException(
+                'Provided doujin does not exists',
+                HttpStatus.NOT_FOUND,
+            );
+        }
+
+        return reactions;
     }
 
     @Get()

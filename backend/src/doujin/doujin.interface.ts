@@ -28,11 +28,12 @@ export interface IDoujin {
 
 export interface HttpLike {
     doujinId: string;
-    uid: string;
+    userId: string;
 }
 
-export interface ScoreResponse {
+export interface ReactionResponse {
     score: number;
+    reactors: string[];
 }
 
 export interface DoujinResponse {

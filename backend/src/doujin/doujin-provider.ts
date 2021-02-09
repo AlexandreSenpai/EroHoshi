@@ -66,10 +66,19 @@ export class DoujinProvider {
         return doujin;
     }
 
-    async likeDoujin(doujinId: string, uid: string): Promise<number> {
+    async likeDoujin(
+        doujinId: string,
+        uid: string,
+    ): Promise<{ score: number; reactors: string[] }> {
         const ref = admin.firestore().collection('doujins').doc(doujinId);
 
-        const doujin = (await ref.get().then((doc) => doc.data())) as IDoujin;
+        const doc = await ref.get();
+
+        if (!doc.exists) {
+            return undefined;
+        }
+
+        const doujin = doc.data() as IDoujin;
 
         const [likes, dislikes] = [
             doujin.likes.length + 1,
@@ -90,13 +99,27 @@ export class DoujinProvider {
                     : doujin.dislikes,
         });
 
-        return +(this.scoreCalc(likes, likes + dislikes, 0.97) * 10).toFixed(1);
+        return {
+            score: +(
+                this.scoreCalc(likes, likes + dislikes, 0.97) * 10
+            ).toFixed(1),
+            reactors: [...doujin.likes, uid],
+        };
     }
 
-    async dislikeDoujin(doujinId: string, uid: string): Promise<number> {
+    async dislikeDoujin(
+        doujinId: string,
+        uid: string,
+    ): Promise<{ score: number; reactors: string[] }> {
         const ref = admin.firestore().collection('doujins').doc(doujinId);
 
-        const doujin = (await ref.get().then((doc) => doc.data())) as IDoujin;
+        const doc = await ref.get();
+
+        if (!doc.exists) {
+            return undefined;
+        }
+
+        const doujin = doc.data() as IDoujin;
 
         const [likes, dislikes] = [
             doujin.likes.length,
@@ -118,7 +141,12 @@ export class DoujinProvider {
             dislikes: [...doujin.dislikes, uid],
         });
 
-        return +(this.scoreCalc(likes, likes + dislikes, 0.97) * 10).toFixed(1);
+        return {
+            score: +(
+                this.scoreCalc(likes, likes + dislikes, 0.97) * 10
+            ).toFixed(1),
+            reactors: [...doujin.dislikes, uid],
+        };
     }
 
     async findAllOrderBy(

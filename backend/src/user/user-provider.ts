@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-
-export type User = admin.auth.UserRecord;
+import { User, UserBody } from './user.interface';
 
 @Injectable()
 export class UserProvider {
@@ -17,5 +16,21 @@ export class UserProvider {
             .auth()
             .getUsers(userIdentifiers)
             .then((res) => res.users);
+    }
+
+    async save(user: UserBody): Promise<User> {
+        const created = await admin.auth().createUser({
+            email: user.email,
+            password: user.password,
+            photoURL: user.avatar,
+            displayName: user.userName,
+        });
+
+        await admin.auth().setCustomUserClaims(created.uid, {
+            cover: user.cover,
+            favorites: user.favorites,
+        });
+
+        return created;
     }
 }
