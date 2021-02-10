@@ -91,3 +91,15 @@ export const LinkHolder = styled.div`
         color: #ff6a00;
     }
 `;
+
+export const GoBack = styled.div`
+    width: 100%;
+    position: absolute;
+    top: 0;
+    padding: 1rem 2rem;
+`;
+
+export const Logo = styled.img`
+    width: 4rem;
+    cursor: pointer;
+`;

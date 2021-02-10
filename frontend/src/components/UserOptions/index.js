@@ -42,12 +42,12 @@ export default function UserOptions() {
                 </IconButton>
                 <Grow in={checked} style={{ transformOrigin: '500px 0 0' }} {...(checked ? { timeout: 200 } : {})}>
                     <UnorderedList>
-                        <ListItem onClick={to_profile}>
+                        {/* <ListItem onClick={to_profile}>
                             <AccountBoxIcon color='inherit' fontSize='inherit'/>
                             <span>
                                 Profile
                             </span>
-                        </ListItem>
+                        </ListItem> */}
                         <ListItem onClick={signOut}>
                             <ExitToAppIcon color='inherit' fontSize='inherit'/>
                             <span>

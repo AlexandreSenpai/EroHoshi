@@ -6,7 +6,7 @@ export default function Title(doujin_title){
         document.title = doujin_title;
 
         return () => {
-            document.title = "EroHoshi"
+            document.title = "EroHoshi :: Free Hentai and Doujinshi Online Reader"
         };
     }, [doujin_title])
 

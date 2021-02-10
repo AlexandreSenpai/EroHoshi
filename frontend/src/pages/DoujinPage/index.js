@@ -37,7 +37,7 @@ import {
 
 export default function DoujinPage({ computedMatch, location, history }) {
 
-    const [title, setTitle] = useState("EroHoshi");
+    const [title, setTitle] = useState("EroHoshi :: Free Hentai and Doujinshi Online Reader");
     const [ID, setID] = useState(0);
     const [secondaryTitle, setSecondaryTitle] = useState('');
     const [previewList, setPreviewList] = useState([]);
@@ -60,8 +60,8 @@ export default function DoujinPage({ computedMatch, location, history }) {
     const [pages, setPages] = useState(0);
 
     const { setIsLoading } = useContext(LoaderContext);    
-    const { currentUser, userToken } = useContext(AuthContext);    
-
+    const { currentUser, userToken } = useContext(AuthContext);   
+    
     useEffect(() => {
         get_doujins();
     }, [location]);
@@ -70,18 +70,21 @@ export default function DoujinPage({ computedMatch, location, history }) {
         if(currentUser){
             if(likes.indexOf(currentUser.uid) === -1){
                 setCanLike(true);
+            }else{
+                setCanLike(false);
             }
             if(dislikes.indexOf(currentUser.uid) === -1){
                 setCanDislike(true);
+            }else{
+                setCanDislike(false);
             }
         }
-    }, [currentUser, likes]);
+    }, [currentUser, likes, dislikes]);
 
     useTitle(title);
     useScrollbar();
 
     const handle_like = async (method) => {
-        console.log(userToken);
         if(method === 'like'){
             const new_score = await api.post('/like', { 'uid': currentUser.uid, doujinId: ID.toString() }, { headers: { Authorization: `Bearer ${userToken}` } });
             setScore(prevScore => {
@@ -89,6 +92,12 @@ export default function DoujinPage({ computedMatch, location, history }) {
                     return new_score.data.score
                 }
                 return prevScore
+            });
+            setLikes(prevLikes => {
+                return [...prevLikes, currentUser.uid]
+            });
+            setDislikes(prevDislikes => {
+                return prevDislikes.filter(id => id !== currentUser.uid);
             });
         }else{
             const new_score = await api.post('/dislike', { 'uid': currentUser.uid, doujinId: ID.toString() }, { headers: { Authorization: `Bearer ${userToken}` } });
@@ -98,8 +107,12 @@ export default function DoujinPage({ computedMatch, location, history }) {
                 }
                 return prevScore
             })
-
-
+            setDislikes(prevDislike => {
+                return [...prevDislike, currentUser.uid]
+            });
+            setLikes(prevLikes => {
+                return prevLikes.filter(id => id !== currentUser.uid);
+            });
         }
     }
 
@@ -182,10 +195,10 @@ export default function DoujinPage({ computedMatch, location, history }) {
                                 <Score>{score}</Score>
                             </RatingHolder>
                             <ButtonsContainer>
-                                <Button background="#ff6a00" disabled={!canLike} onClick={() => handle_like('like')}>
+                                <Button disabled={!canLike} onClick={() => handle_like('like')}>
                                     <ThumbUpIcon /> Like ({likes.length})
                                 </Button>
-                                <Button background="#ff6a00" disabled={!canDislike} onClick={() => handle_like('dislike')}>
+                                <Button disabled={!canDislike} onClick={() => handle_like('dislike')}>
                                     <ThumbDownIcon /> Dislike ({dislikes.length})
                                 </Button>
                             </ButtonsContainer>
@@ -214,7 +227,7 @@ export default function DoujinPage({ computedMatch, location, history }) {
                       ))
                 }
                 <ReadMoreHolder>
-                    <Button background="#ff6a00" color="inherit" onClick={toggle_show}>
+                    <Button color="inherit" onClick={toggle_show}>
                         <MoreHorizIcon color="inherit" fontSize="large" /> 
                         {showMore === false ? "Show More" : "Show Less"}
                     </Button>

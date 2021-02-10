@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
-import Cookie from 'js-cookies';
-import { uid } from 'uid';
 
 import Section from '../../components/Section';
 import Thumb from '../../components/Thumb';
@@ -19,14 +17,12 @@ export default function HomePage() {
 
     const [popular, setPopular] = useState([]);
 
-    let uuid = Cookie.getItem('uid') ? Cookie.getItem('uid') : Cookie.setItem('uid', uid())
-
     useEffect(() => {
         get_popular();
     }, []);
 
     const get_popular = useCallback(() => {
-        api.get('/popular').then(records => {
+        api.get('/popular', { params: { limit: 6 } }).then(records => {
             setPopular(records.data);
         });
     });

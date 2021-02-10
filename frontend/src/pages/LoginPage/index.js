@@ -4,6 +4,7 @@ import background from '../../static/images/loginBackground.png';
 import { AuthContext } from '../../contexts/auth';
 import { LoaderContext } from '../../contexts/loader';
 import { Input, Form } from '../../components/Form';
+import logo from '../../static/images/logo.png';
 
 import {
     LoginContainer,
@@ -12,7 +13,9 @@ import {
     ButtonHolder,
     Button,
     OptionsHolder,
-    LinkHolder
+    LinkHolder,
+    GoBack,
+    Logo
 } from './styles';
 
 export default function LoginPage({ history }) {
@@ -39,6 +42,9 @@ export default function LoginPage({ history }) {
 
     return(
         <LoginContainer background={background}>
+            <GoBack>
+                <Logo src={logo} onClick={() => history.goBack()}/>
+            </GoBack>
             <Form onSubmit={handle_submit}>
                 <TitleHolder>
                     reject the society, become hentai.

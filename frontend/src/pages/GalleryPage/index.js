@@ -21,7 +21,7 @@ export default function GalleryPage({ computedMatch, location }) {
 
     const [page, setPage] = useState(0);
     const [images, setImages] = useState([]);
-    const [title, setTitle] = useState("EroHoshi");
+    const [title, setTitle] = useState("EroHoshi :: Free Hentai and Doujinshi Online Reader");
 
     useEffect(() => {
         if(location.state){

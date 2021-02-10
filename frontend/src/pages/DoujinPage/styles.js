@@ -185,6 +185,7 @@ export const Button = styled.button`
     border: none;
     border-radius: 5px;
     justify-content: center;
+    background: #ff6a00;
     padding: 1rem;
     margin: .5rem;
     transition: 100ms ease-in;

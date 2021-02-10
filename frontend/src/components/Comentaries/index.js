@@ -52,8 +52,6 @@ export default function Comentaries({user_id, doujin_id, comments, user_token, c
             const current_comments = Array.from(commentariesList);
             setCommentariesList(new Map([...[[res.data.commentId, {...res.data, user_name: current_user.displayName, avatar: current_user.photoURL}]], ...current_comments]));
             reset();
-        }else{
-            console.log('não há comentário');
         }
 
     }
@@ -75,8 +73,6 @@ export default function Comentaries({user_id, doujin_id, comments, user_token, c
 
             setCommentariesList(new Map(copying_map_to_array));
             reset();
-        }else{
-            console.log('não há comentário');
         }
 
     }

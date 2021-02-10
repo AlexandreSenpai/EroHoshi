@@ -102,12 +102,12 @@ export default function FlySidebar({ sidebarStatus, setSidebarStatus, history })
                     
                     {currentUser
                         ?   <Fragment>
-                                <ListItem onClick={to_profile}>
+                                {/* <ListItem onClick={to_profile}>
                                     <AccountBoxIcon color='inherit' fontSize='inherit'/>
                                     <span>
                                         Profile
                                     </span>
-                                </ListItem>
+                                </ListItem> */}
                                 <ListItem onClick={signOut}>
                                     <ExitToAppIcon color='inherit' fontSize='inherit'/>
                                     <span>
