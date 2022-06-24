@@ -1,10 +1,12 @@
 const express = require("express");
-const routes = require("./routes/index.js")
+const routes = require("./routes/Routes.js")
 
 const app = express(); 
 
-app.use(express.json()); 
+app.use(express.json({
+    type: ["application.json"]
+}))
 
-routes(app); 
+app.use(routes);
 
 module.exports = app;
