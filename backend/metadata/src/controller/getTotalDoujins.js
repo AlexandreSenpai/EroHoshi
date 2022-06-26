@@ -1,4 +1,4 @@
-const db = require("../../firebase/db.js")
+const db = require("../firebase/db.js")
 
 async function getTotalDoujins(req, res) {
 
@@ -11,8 +11,8 @@ async function getTotalDoujins(req, res) {
     // return the data from document (in this case, the amount of doujins in database)
     if (!doujins.exists) {
         return res
-        .status(404).
-        send("There's nothing here")
+        .status(404)
+        .send("There's nothing here")
     } else { 
         return res
         .status(200)
